@@ -427,80 +427,116 @@ function goBackToEquip() {
 }
 
 // Select and Unselect Maca e Cadeira de Rodas
-document.addEventListener('DOMContentLoaded', () => {
-    const equipSections = document.querySelectorAll('.equip-form .section');
-    let currentMainOption = 'acamado'; // Since acamado is preselected by default
 
+document.addEventListener('DOMContentLoaded', () => {
+    // Select all sections within the equip-form
+    const equipSections = document.querySelectorAll('.equip-form .section');
+    let currentMainOption = 'acamado'; // Default selection for main transport option
+
+    // Add click event listeners to each section
     equipSections.forEach(section => {
         section.addEventListener('click', (e) => {
             const input = section.querySelector('input');
 
-            // If clicked directly on input or not, we handle the same way
-            // Check if main or extra
+            // Ensure clicking anywhere toggles the checkbox/radio button
+            if (e.target !== input) {
+                input.checked = !input.checked; // Toggle the input's checked state
+            }
+
+            // Handle main transport options (acamado, cadeira, autonoma)
             if (section.hasAttribute('data-main')) {
-                // It's a main option
-                const optionName = section.getAttribute('data-main');
+                const optionName = section.getAttribute('data-main'); // Get the main option name
+
                 if (currentMainOption === optionName) {
-                    // Clicking the same selected option deselects it
+                    // If already selected, uncheck and clear the current selection
                     input.checked = false;
                     currentMainOption = null;
                 } else {
-                    // Selecting a different main option
+                    // Select the clicked main option and uncheck others
                     uncheckAllMainOptions();
                     input.checked = true;
                     currentMainOption = optionName;
                 }
-            } else {
-                // It's an extra equipment checkbox
-                input.checked = !input.checked;
-                handleOverrides();
+
+                handleExtraDeselection(); // Handle logic to deselect extras if needed
+            } else if (section.hasAttribute('data-extra')) {
+                // Handle extra equipment logic (e.g., cadeira or maca)
+                const extraType = section.getAttribute('data-extra'); // Get the extra type
+                handleExtraSelection(extraType, input.checked); // Process extra selection and conflicts
             }
         });
     });
 
+    /**
+     * Uncheck all main transport options (e.g., acamado, cadeira, autonoma)
+     */
     function uncheckAllMainOptions() {
         equipSections.forEach(sec => {
             if (sec.hasAttribute('data-main')) {
                 const inp = sec.querySelector('input[type="radio"]');
-                inp.checked = false;
+                inp.checked = false; // Uncheck the radio button
             }
         });
-        currentMainOption = null;
+        currentMainOption = null; // Clear the current main option
     }
 
-    function handleOverrides() {
-        const pessoaAutonomaSec = equipSections[0]; // data-main="autonoma"
-        const cadeiraRodasSec = equipSections[1];   // data-main="cadeira"
-        const acamadoMacaSec = equipSections[2];    // data-main="acamado"
+    /**
+     * Handle selection of extra equipment (e.g., aluguer de cadeira or maca)
+     * @param {string} extraType - The type of extra equipment ("cadeira" or "maca")
+     * @param {boolean} isChecked - Whether the extra is being checked or unchecked
+     */
+    function handleExtraSelection(extraType, isChecked) {
+        const aluguerCadeira = document.querySelector('[data-extra="cadeira"] input[type="checkbox"]');
+        const macaCoquille = document.querySelector('[data-extra="maca"] input[type="checkbox"]');
+        const cadeiraRodasSec = document.querySelector('[data-main="cadeira"]');
+        const acamadoMacaSec = document.querySelector('[data-main="acamado"]');
 
-        const oxigenoterapia = equipSections[3].querySelector('input[type="checkbox"]'); // index 3
-        const aluguerCadeira = equipSections[4].querySelector('input[type="checkbox"]'); // index 4
-        const macaCoquille = equipSections[5].querySelector('input[type="checkbox"]');   // index 5
-        const monitorizacao = equipSections[6].querySelector('input[type="checkbox"]');  // index 6
-
-        // Fazer check se cadeira está selectionada then coquille has to go false
-
-        if (aluguerCadeira.checked) {
-            // If Aluguer Cadeira is checked, select Cadeira de rodas
-            uncheckAllMainOptions();
-            cadeiraRodasSec.querySelector('input[type="radio"]').checked = true;
-            acamadoMacaSec.querySelector('input[type="radio"]').checked = false;
-            currentMainOption = 'cadeira';
-            // Uncheck Maca Coquille if it was checked
+        if (extraType === 'cadeira') {
+            if (isChecked) {
+                // Select "cadeira" extra and deselect "maca"
+                macaCoquille.checked = false;
+                uncheckAllMainOptions(); // Ensure no other main options are selected
+                cadeiraRodasSec.querySelector('input[type="radio"]').checked = true;
+                currentMainOption = 'cadeira'; // Update current main option
+            } else {
+                // If "cadeira" is unchecked, clear the associated main option
+                cadeiraRodasSec.querySelector('input[type="radio"]').checked = false;
+                currentMainOption = null;
+            }
+        } else if (extraType === 'maca') {
+            if (isChecked) {
+                // Select "maca" extra and deselect "cadeira"
+                aluguerCadeira.checked = false;
+                uncheckAllMainOptions(); // Ensure no other main options are selected
+                acamadoMacaSec.querySelector('input[type="radio"]').checked = true;
+                currentMainOption = 'acamado'; // Update current main option
+            } else {
+                // If "maca" is unchecked, clear the associated main option
+                acamadoMacaSec.querySelector('input[type="radio"]').checked = false;
+                currentMainOption = null;
+            }
         }
-        
-        if (macaCoquille.checked) {
-            // If Maca Coquille is checked, select Acamado/Maca
-            uncheckAllMainOptions();
-            acamadoMacaSec.querySelector('input[type="radio"]').checked = true;
-            cadeiraRodasSec.querySelector('input[type="radio"]').checked = false;
-            currentMainOption = 'acamado';
-            // Uncheck Aluguer Cadeira if it was checked
-            
+    }
+
+    /**
+     * Deselect extra equipment (e.g., aluguer de cadeira or maca) when "autonoma" is selected
+     */
+    function handleExtraDeselection() {
+        const aluguerCadeira = document.querySelector('[data-extra="cadeira"] input[type="checkbox"]');
+        const macaCoquille = document.querySelector('[data-extra="maca"] input[type="checkbox"]');
+
+        if (currentMainOption === 'autonoma') {
+            // Deselect both extras if "autonoma" is selected
+            aluguerCadeira.checked = false;
+            macaCoquille.checked = false;
         }
-          
     }
 });
+
+
+
+
+
 
 
 // Change to Pay Page

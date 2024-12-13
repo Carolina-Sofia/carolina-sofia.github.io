@@ -240,66 +240,65 @@
 
             <!-- Form Section -->
             <div class="equip-form">
-                <div class="section" data-main="acamado">
-                    <div class="text">
-                        <h3>Acamado / Maca</h3>
-                        <p>Utente sem condição de sentar-se ou ser transportado de outra forma.</p>
-                    </div>
-                    <input type="radio" class="equip-checkbox" checked/>
-                </div>
-
-                <div class="section" data-main="cadeira">
-                    <div class="text">
-                        <h3>Cadeira de rodas</h3>
-                        <p>Utente em cadeira de rodas temporariamente ou definitivamente.</p>
-                    </div>
-                    <input type="radio" class="equip-checkbox"/>
-                </div>
-
-                <div class="section" data-main="autonoma">
-                    <div class="text">
-                        <h3>Pessoa Autónoma</h3>
-                        <p>Utente consegue andar sozinho ou com ajuda de andarilhos.</p>
-                    </div>
-                    <input type="radio" class="equip-checkbox"/>
-                </div>
-                
-
-                
-                <h3>Equipamentos e Extras:</h3>
-            
-                <div class="section">
-                    <div class="text">
-                        <h3>Oxigenoterapia + €10,00</h3>
-                        <p>Utente com baixa saturação e precisa de oxigenação forçada.</p>
-                    </div>
-                    <input type="checkbox" />
-                </div>
-            
-                <div class="section">
-                    <div class="text">
-                        <h3>Aluguer de Cadeira + €10,00</h3>
-                        <p>Deixamos uma cadeira sob os seus cuidados, e recolhemos no retorno.</p>
-                    </div>
-                    <input type="checkbox" />
-                </div>
-            
-                <div class="section">
-                    <div class="text">
-                        <h3>Maca Coquille + €20,00</h3>
-                        <p>Maca especial, utilizada em fraturas de modo geral.</p>
-                    </div>
-                    <input type="checkbox" />
-                </div>
-            
-                <div class="section">
-                    <div class="text">
-                        <h3>Monitorização Cardíaca + €30,00</h3>
-                        <p>Monitorização de ECG, respiração e (ou) saturação periférica de oxigênio.</p>
-                    </div>
-                    <input type="checkbox" />
-                </div>
-            </div>
+              <div class="section" data-main="acamado">
+                  <div class="text">
+                      <h3>Acamado / Maca</h3>
+                      <p>Utente sem condição de sentar-se ou ser transportado de outra forma.</p>
+                  </div>
+                  <input type="radio" name="main-option" class="equip-checkbox" checked />
+              </div>
+          
+              <div class="section" data-main="cadeira">
+                  <div class="text">
+                      <h3>Cadeira de rodas</h3>
+                      <p>Utente em cadeira de rodas temporariamente ou definitivamente.</p>
+                  </div>
+                  <input type="radio" name="main-option" class="equip-checkbox" />
+              </div>
+          
+              <div class="section" data-main="autonoma">
+                  <div class="text">
+                      <h3>Pessoa Autónoma</h3>
+                      <p>Utente consegue andar sozinho ou com ajuda de andarilhos.</p>
+                  </div>
+                  <input type="radio" name="main-option" class="equip-checkbox" />
+              </div>
+          
+              <h3>Equipamentos e Extras:</h3>
+          
+              <div class="section" data-extra="oxigenoterapia">
+                  <div class="text">
+                      <h3>Oxigenoterapia + €10,00</h3>
+                      <p>Utente com baixa saturação e precisa de oxigenação forçada.</p>
+                  </div>
+                  <input type="checkbox" value="oxigenoterapia" />
+              </div>
+          
+              <div class="section" data-extra="cadeira">
+                  <div class="text">
+                      <h3>Aluguer de Cadeira + €10,00</h3>
+                      <p>Deixamos uma cadeira sob os seus cuidados, e recolhemos no retorno.</p>
+                  </div>
+                  <input type="checkbox" value="cadeira" />
+              </div>
+          
+              <div class="section" data-extra="maca">
+                  <div class="text">
+                      <h3>Maca Coquille + €20,00</h3>
+                      <p>Maca especial, utilizada em fraturas de modo geral.</p>
+                  </div>
+                  <input type="checkbox" value="maca" />
+              </div>
+          
+              <div class="section" data-extra="monitorizacao">
+                  <div class="text">
+                      <h3>Monitorização Cardíaca + €30,00</h3>
+                      <p>Monitorização de ECG, respiração e (ou) saturação periférica de oxigênio.</p>
+                  </div>
+                  <input type="checkbox" value="monitorizacao" />
+              </div>
+          </div>
+          
 
                 <div class="action-buttons">
                     <button type="button" id="submit-details-button" class="continue-button" onclick="goToConfirm()">CONTINUAR</button>
