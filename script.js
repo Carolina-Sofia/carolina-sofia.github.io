@@ -427,7 +427,6 @@ function goBackToEquip() {
 }
 
 // Select and Unselect Maca e Cadeira de Rodas
-
 document.addEventListener('DOMContentLoaded', () => {
     // Select all sections within the equip-form
     const equipSections = document.querySelectorAll('.equip-form .section');
@@ -440,7 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Ensure clicking anywhere toggles the checkbox/radio button
             if (e.target !== input) {
-                input.checked = !input.checked; // Toggle the input's checked state
+                input.checked = !input.checked;
             }
 
             // Handle main transport options (acamado, cadeira, autonoma)
@@ -532,11 +531,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-
-
-
-
-
 
 
 // Change to Pay Page
@@ -645,7 +639,6 @@ function handlePayment() {
     document.getElementById('forma-pagamento-h3').style.display = 'none';
     document.getElementById('NIF').style.display = 'none';
     document.getElementById('pay-now-button').style.display = 'none';
-    document.getElementById('back-button-payment').style.display = 'none';
 
     // Get the summary box
     const summaryBox = document.querySelector('#pay-section .summary-box');
@@ -654,7 +647,6 @@ function handlePayment() {
         alert('Ocorreu um erro ao processar o pagamento. Por favor, tente novamente.');
         return;
     }
-
     // Clear the summary box content
     summaryBox.innerHTML = '';
 
@@ -690,6 +682,10 @@ function handlePayment() {
             <p>O pagamento via MBWay está a ser processado. Conclua a transação na sua aplicação MBWay antes que o tempo expire:</p>
             <p id="timer"><strong>Tempo restante:</strong> 05:00</p>
             <p>Após a confirmação do pagamento, enviaremos um email com os detalhes. Obrigado por confiar nos nossos serviços.</p>
+            <!-- Button -->
+                <div class="action-buttons" id="aguardar-button">
+                    <button class="continue-button" style="background-color:#bcbcbc;">AGUARDANDO PAGAMENTO</button>
+                </div>
         `;
 
         const timerElement = document.getElementById('timer');
@@ -718,14 +714,128 @@ function handlePayment() {
             <p>Para concluir o pagamento, clique no link abaixo:</p>
             <p><a href="${paymentLink}" target="_blank" class="payment-link">Concluir Pagamento</a></p>
             <p>Após a confirmação do pagamento, enviaremos um email de confirmação. Obrigado por escolher os nossos serviços.</p>
+            <!-- Button -->
+                <div class="action-buttons" id="aguardar-button">
+                    <button class="continue-button" style="background-color: #bcbcbc;">AGUARDANDO PAGAMENTO</button>
+                </div>
         `;
     } else {
         alert('Método de pagamento inválido. Por favor, tente novamente.');
     }
+
+    // Change the back button's onclick action
+    const backButton = document.getElementById('back-button-payment');
+    if (backButton) {
+        backButton.setAttribute('onclick', 'goBackToPaymentDetails()');
+    }
+}
+
+
+//Go back to payment page details
+function goBackToPaymentDetails() {
+    const paySection = document.getElementById('pay-section');
+    if (!paySection) {
+        console.error('Main content container not found.');
+        return;
+    }
+
+    // Replace the content with the payment HTML
+    paySection.innerHTML = `
+        <div id="pay-section" class="pay-page" style="display: block; padding: 0; width: 100%;">
+            <!-- Header -->
+            <header class="resume-header">
+                <button class="back-button" onclick="goBackToConfirm()" id="back-button-payment">
+                  <img src="Images/back.svg" alt="Back">
+                </button>
+                <h2>Pagamento</h2>
+            </header>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <span class="progress active"></span>
+                <span class="progress active"></span>
+                <span class="progress active"></span>
+                <span class="progress active"></span>
+                <span class="progress active"></span>
+            </div>
+            <p class="progress-title">Pagamento</p>
+
+            <!-- Payment Method Section -->
+            <div class="summary-section">
+                <h3 id="forma-pagamento-h3">Forma de pagamento</h3>
+                <div class="summary-box">
+                    <!-- Pagamento referência multibanco -->
+                    <label class="payment-option">
+                        <div class="main-content">
+                            <div class="option-content">
+                                <img src="Images/icon-multibanco.png" alt="Multibanco Icon">
+                                <p>Pagamento referência multibanco</p>
+                            </div>
+                            <div class="radio-container">
+                                <input type="radio" name="payment-method" value="multibanco" checked>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <!-- Pagamento MBWay -->
+                    <label class="payment-option">
+                        <div class="main-content">
+                            <div class="option-content">
+                                <img src="Images/icon-mbway.png" alt="MBWay Icon">
+                                <p>Pagamento MBWay</p>
+                            </div>
+                            <div class="radio-container">
+                                <input type="radio" name="payment-method" value="mbway" onclick="toggleMbway(this)">
+                            </div>
+                        </div>
+                        <div class="additional-input" id="mbway">
+                            <label for="mbway-phone-number">Número de Telemóvel:</label>
+                            <input type="text" id="mbway-phone-number" placeholder="ex: 987 654 321">
+                        </div>
+                    </label>
+
+                    <!-- Pagamento Link -->
+                    <label class="payment-option">
+                        <div class="main-content">
+                            <div class="option-content">
+                                <img src="Images/icon-link.svg" alt="Link Icon">
+                                <p>Pagamento Link</p>
+                            </div>
+                            <div class="radio-container">
+                                <input type="radio" name="payment-method" value="link">
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="input-group" id="NIF">
+                <label for="phone-number">NIF (Opcional):</label>
+                <input type="text" id="phone-number" placeholder="ex: 987 654 321">
+            </div>
+
+            <!-- Button -->
+            <div class="action-buttons" id="pay-now-button">
+                <button class="continue-button pay-now-button" onclick="handlePayment()">PAGAR AGORA<span id="pay-now-value"></span></button>
+                <!-- <a href="#" class="cancel-link">Cancelar</a> -->
+            </div>
+        </div>
+    `;
 }
 
 
 
+//Botão pagamento efetuado com sucesso
+//<!-- Button -->
+//                <div class="action-buttons" id="sucesso-button">
+//                    <button class="continue-button" style="background-color: #E8F4ED; color: #4FA071;" >PAGAMENTO EFETUADO COM SUCESSO</button>
+//                </div>
+
+//Botão pagamento recusado
+//<!-- Button -->
+//                <div class="action-buttons" id="recusao-button">
+//                    <button class="continue-button" style="background-color: #FBECEF; color: #D74560;" >PAGAMENTO RECUSADO</button>
+//                </div>
 
 
 //APIs------------------------------------------------------------------------------
