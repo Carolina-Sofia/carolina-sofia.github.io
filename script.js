@@ -815,23 +815,6 @@ function goBackToPaymentDetails() {
 
 
 //APIs------------------------------------------------------------------------------
-
-// document.addEventListener("DOMContentLoaded", () => {
-//     console.log("Script loaded successfully!");
-
-//     // Example of DOM manipulation
-//     const totalPriceElement = document.getElementById("total-price");
-//     totalPriceElement.textContent = "Waiting for pricing data...";
-
-//     // Example data usage
-//     fetch('./scripts/pricing.js') // Replace with your backend endpoint
-//         .then(response => response.json())
-//         .then(data => {
-//             console.log("Fetched pricing data:", data);
-//             totalPriceElement.textContent = `Base Price: €${data[0]["PREÇO BASE"]}`;
-//         })
-//         .catch(err => console.error("Error fetching pricing data:", err));
-// });
 document.addEventListener('DOMContentLoaded', async () => {
     // Initialize Google Autocomplete
     initializePlacesAutocomplete();
