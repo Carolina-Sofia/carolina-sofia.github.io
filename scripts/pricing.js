@@ -9,6 +9,32 @@ let finalPrice = 0;          // Final price
 const longDistanceBasePrice = 120.00;  // Long-distance base price
 const longDistancePricePerKm = 1.20;   // Long-distance price per kilometer
 
+async function loadPricingFromAirtable(recordId) {
+    const record = await getPricingByRecordId(recordId);
+    if (record) {
+        // Assuming these fields exist in Airtable
+        if (record['PREÇO BASE']) {
+            basePrice = parseFloat(record['PREÇO BASE']);
+        }
+        if (record['PREÇO KM']) {
+            pricePerKm = parseFloat(record['PREÇO KM']);
+        }
+        if (record['TAXA DE LIMPEZA']) {
+            cleaningFee = parseFloat(record['TAXA DE LIMPEZA']);
+        }
+        
+        console.log('Updated pricing variables from Airtable:');
+        console.log('basePrice:', basePrice);
+        console.log('pricePerKm:', pricePerKm);
+        console.log('cleaningFee:', cleaningFee);
+
+        // If you need to re-calculate or update the displayed price, you can do it here
+        updateTotal(); // For example, re-calculate the total if needed.
+    } else {
+        console.warn('No record found with the given RecordId');
+    }
+}
+
 // Function to calculate price based on distance
 function calculatePrice(distanceInKm) {
     let distanceCost;

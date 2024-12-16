@@ -815,25 +815,30 @@ function goBackToPaymentDetails() {
 
 
 //APIs------------------------------------------------------------------------------
-// APIs LET'S TRY
-// const GOOGLE_API_KEY = "AIzaSyBkuGwkSA-LHcRedNwDGjNUDYOdcM0Z5V8"; 
 
-// async function getPlaceId(address) {
-//     const url = `http://localhost:3000/api/place?address=${encodeURIComponent(address)}`;
+// document.addEventListener("DOMContentLoaded", () => {
+//     console.log("Script loaded successfully!");
 
-//     try {
-//         const response = await fetch(url); // No need for no-cors here
-//         if (!response.ok) throw new Error("Failed to fetch Place ID from the proxy");
+//     // Example of DOM manipulation
+//     const totalPriceElement = document.getElementById("total-price");
+//     totalPriceElement.textContent = "Waiting for pricing data...";
 
-//         const data = await response.json();
-//         if (data.candidates && data.candidates.length > 0) {
-//             return data.candidates[0].place_id; // Extract Place ID from the response
-//         } else {
-//             console.error(`No Place ID found for address: ${address}`);
-//             return null;
-//         }
-//     } catch (error) {
-//         console.error(`Error fetching Place ID for address: ${address}`, error);
-//         return null;
-//     }
-// }
+//     // Example data usage
+//     fetch('./scripts/pricing.js') // Replace with your backend endpoint
+//         .then(response => response.json())
+//         .then(data => {
+//             console.log("Fetched pricing data:", data);
+//             totalPriceElement.textContent = `Base Price: €${data[0]["PREÇO BASE"]}`;
+//         })
+//         .catch(err => console.error("Error fetching pricing data:", err));
+// });
+document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize Google Autocomplete
+    initializePlacesAutocomplete();
+    
+    // Load pricing variables from Airtable
+    await loadPricingFromAirtable('recBG03zIEKzXcj1V'); // Use the actual record ID
+    
+    // At this point, basePrice, pricePerKm, cleaningFee are updated.
+    // Any calculations that depend on these should now use the updated values.
+});
