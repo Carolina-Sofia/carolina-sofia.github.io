@@ -825,3 +825,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // At this point, basePrice, pricePerKm, cleaningFee are updated.
     // Any calculations that depend on these should now use the updated values.
 });
+
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('DOM fully loaded, now calling Airtable...');
+    const recordId = 'recBG03zIEKzXcj1V'; // or your actual record ID
+    await loadPricingFromAirtable(recordId);
+    // After loading from Airtable, basePrice should be updated.
+    console.log('basePrice after Airtable:', basePrice);
+});

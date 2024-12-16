@@ -23,10 +23,7 @@ async function loadPricingFromAirtable(recordId) {
             cleaningFee = parseFloat(record['TAXA DE LIMPEZA']);
         }
         
-        console.log('Updated pricing variables from Airtable:');
-        console.log('basePrice:', basePrice);
-        console.log('pricePerKm:', pricePerKm);
-        console.log('cleaningFee:', cleaningFee);
+        
 
         // If you need to re-calculate or update the displayed price, you can do it here
         updateTotal(); // For example, re-calculate the total if needed.
