@@ -12,7 +12,6 @@ const longDistancePricePerKm = 1.20;   // Long-distance price per kilometer
 async function loadPricingFromAirtable(recordId) {
     const record = await getPricingByRecordId(recordId);
     if (record) {
-        // Assuming these fields exist in Airtable
         if (record['PREÇO BASE']) {
             basePrice = parseFloat(record['PREÇO BASE']);
         }
@@ -22,11 +21,9 @@ async function loadPricingFromAirtable(recordId) {
         if (record['TAXA DE LIMPEZA']) {
             cleaningFee = parseFloat(record['TAXA DE LIMPEZA']);
         }
-        
-        
 
-        // If you need to re-calculate or update the displayed price, you can do it here
-        updateTotal(); // For example, re-calculate the total if needed.
+        // Recalculate total if needed
+        updateTotal();
     } else {
         console.warn('No record found with the given RecordId');
     }
@@ -50,27 +47,38 @@ function calculatePrice(distanceInKm) {
 
 // Function to update the total price (distance-based and round-trip logic)
 function updateTotal() {
-    // Get the round-trip toggle and total price elements
     const toggle = document.getElementById("round-trip-toggle");
     const totalPriceElement = document.getElementById("total-price");
 
     let totalWithDiscount = finalPrice;
 
-    if (toggle.checked) {
+    if (toggle && toggle.checked) {
         // Apply round-trip discount and double the price
         totalWithDiscount = (finalPrice * (1 - discountRate)) * 2;
     }
 
-    // Update the total price element
-    totalPriceElement.textContent = `${totalWithDiscount.toFixed(2).replace(".", ",")}€`;
+    if (totalPriceElement) {
+        totalPriceElement.textContent = `${totalWithDiscount.toFixed(2).replace(".", ",")}€`;
+    }
 }
 
-// Function to update the price using distance
-function updateSummary(distanceInMeters) {
+// Make updateSummary async so we can await Airtable data loading
+async function updateSummary(distanceInMeters) {
     const distanceInKm = (distanceInMeters / 1000).toFixed(2); // Convert meters to kilometers
     console.log(`Distance in km: ${distanceInKm}`);
 
-    // Update the final price using the calculated distance
+    // Choose record based on distance
+    let recordId;
+    if (distanceInKm > 150) {
+        recordId = 'recNTA4GqJILtR7xc'; // Long-distance pricing record
+    } else {
+        recordId = 'recBG03zIEKzXcj1V'; // Normal pricing record
+    }
+
+    // Load pricing from the selected Airtable record
+    await loadPricingFromAirtable(recordId);
+
+    // Now that pricing variables are updated, calculate the final price
     finalPrice = calculatePrice(distanceInKm);
 
     // Recalculate and update the total price
