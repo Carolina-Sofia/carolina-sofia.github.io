@@ -112,6 +112,7 @@ const verifyButton = document.getElementById('verify-button');
 const pickupInput = document.getElementById('pickup');
 const destinationInput = document.getElementById('destination');
 
+//Can only click verificar trajeto if the form is filled
 function checkInputs() {
     if (pickupInput.value.trim() !== '' && destinationInput.value.trim() !== '') {
         verifyButton.disabled = false;
@@ -170,31 +171,6 @@ function validateForm() {
     }
     return { pickup, destination };
 }
-
-// Temporary price
-let basePrice = 90.00;
-const discountRate = 0.10;
-
-// Function to calculate and update the total price
-function updateTotal() {
-    // Get the toggle and total price elements
-    const toggle = document.getElementById("round-trip-toggle");
-    const totalPriceElement = document.getElementById("total-price");
-
-    // Calculate the total price
-    let finalPrice = toggle.checked
-        ? basePrice * (1 - discountRate) * 2 // Apply discount for round trip
-        : basePrice; // Base price for one-way trip
-
-    // Update the total price element
-    totalPriceElement.textContent = `${finalPrice.toFixed(2).replace(".", ",")}€`;
-}
-
-// Set up the initial price on page load
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize the total price
-    updateTotal();
-});
 
 
 // Change to page to fill in the details
@@ -428,77 +404,107 @@ function goBackToEquip() {
 
 // Select and Unselect Maca e Cadeira de Rodas
 document.addEventListener('DOMContentLoaded', () => {
+    // Select all sections within the equip-form
     const equipSections = document.querySelectorAll('.equip-form .section');
-    let currentMainOption = 'acamado'; // Since acamado is preselected by default
+    let currentMainOption = 'acamado'; // Default selection for main transport option
 
+    // Add click event listeners to each section
     equipSections.forEach(section => {
         section.addEventListener('click', (e) => {
             const input = section.querySelector('input');
 
-            // If clicked directly on input or not, we handle the same way
-            // Check if main or extra
+            // Ensure clicking anywhere toggles the checkbox/radio button
+            if (e.target !== input) {
+                input.checked = !input.checked;
+            }
+
+            // Handle main transport options (acamado, cadeira, autonoma)
             if (section.hasAttribute('data-main')) {
-                // It's a main option
-                const optionName = section.getAttribute('data-main');
+                const optionName = section.getAttribute('data-main'); // Get the main option name
+
                 if (currentMainOption === optionName) {
-                    // Clicking the same selected option deselects it
+                    // If already selected, uncheck and clear the current selection
                     input.checked = false;
                     currentMainOption = null;
                 } else {
-                    // Selecting a different main option
+                    // Select the clicked main option and uncheck others
                     uncheckAllMainOptions();
                     input.checked = true;
                     currentMainOption = optionName;
                 }
-            } else {
-                // It's an extra equipment checkbox
-                input.checked = !input.checked;
-                handleOverrides();
+
+                handleExtraDeselection(); // Handle logic to deselect extras if needed
+            } else if (section.hasAttribute('data-extra')) {
+                // Handle extra equipment logic (e.g., cadeira or maca)
+                const extraType = section.getAttribute('data-extra'); // Get the extra type
+                handleExtraSelection(extraType, input.checked); // Process extra selection and conflicts
             }
         });
     });
 
+    /**
+     * Uncheck all main transport options (e.g., acamado, cadeira, autonoma)
+     */
     function uncheckAllMainOptions() {
         equipSections.forEach(sec => {
             if (sec.hasAttribute('data-main')) {
                 const inp = sec.querySelector('input[type="radio"]');
-                inp.checked = false;
+                inp.checked = false; // Uncheck the radio button
             }
         });
-        currentMainOption = null;
+        currentMainOption = null; // Clear the current main option
     }
 
-    function handleOverrides() {
-        const pessoaAutonomaSec = equipSections[0]; // data-main="autonoma"
-        const cadeiraRodasSec = equipSections[1];   // data-main="cadeira"
-        const acamadoMacaSec = equipSections[2];    // data-main="acamado"
+    /**
+     * Handle selection of extra equipment (e.g., aluguer de cadeira or maca)
+     * @param {string} extraType - The type of extra equipment ("cadeira" or "maca")
+     * @param {boolean} isChecked - Whether the extra is being checked or unchecked
+     */
+    function handleExtraSelection(extraType, isChecked) {
+        const aluguerCadeira = document.querySelector('[data-extra="cadeira"] input[type="checkbox"]');
+        const macaCoquille = document.querySelector('[data-extra="maca"] input[type="checkbox"]');
+        const cadeiraRodasSec = document.querySelector('[data-main="cadeira"]');
+        const acamadoMacaSec = document.querySelector('[data-main="acamado"]');
 
-        const oxigenoterapia = equipSections[3].querySelector('input[type="checkbox"]'); // index 3
-        const aluguerCadeira = equipSections[4].querySelector('input[type="checkbox"]'); // index 4
-        const macaCoquille = equipSections[5].querySelector('input[type="checkbox"]');   // index 5
-        const monitorizacao = equipSections[6].querySelector('input[type="checkbox"]');  // index 6
-
-        // Fazer check se cadeira está selectionada then coquille has to go false
-
-        if (aluguerCadeira.checked) {
-            // If Aluguer Cadeira is checked, select Cadeira de rodas
-            uncheckAllMainOptions();
-            cadeiraRodasSec.querySelector('input[type="radio"]').checked = true;
-            acamadoMacaSec.querySelector('input[type="radio"]').checked = false;
-            currentMainOption = 'cadeira';
-            // Uncheck Maca Coquille if it was checked
+        if (extraType === 'cadeira') {
+            if (isChecked) {
+                // Select "cadeira" extra and deselect "maca"
+                macaCoquille.checked = false;
+                uncheckAllMainOptions(); // Ensure no other main options are selected
+                cadeiraRodasSec.querySelector('input[type="radio"]').checked = true;
+                currentMainOption = 'cadeira'; // Update current main option
+            } else {
+                // If "cadeira" is unchecked, clear the associated main option
+                cadeiraRodasSec.querySelector('input[type="radio"]').checked = false;
+                currentMainOption = null;
+            }
+        } else if (extraType === 'maca') {
+            if (isChecked) {
+                // Select "maca" extra and deselect "cadeira"
+                aluguerCadeira.checked = false;
+                uncheckAllMainOptions(); // Ensure no other main options are selected
+                acamadoMacaSec.querySelector('input[type="radio"]').checked = true;
+                currentMainOption = 'acamado'; // Update current main option
+            } else {
+                // If "maca" is unchecked, clear the associated main option
+                acamadoMacaSec.querySelector('input[type="radio"]').checked = false;
+                currentMainOption = null;
+            }
         }
-        
-        if (macaCoquille.checked) {
-            // If Maca Coquille is checked, select Acamado/Maca
-            uncheckAllMainOptions();
-            acamadoMacaSec.querySelector('input[type="radio"]').checked = true;
-            cadeiraRodasSec.querySelector('input[type="radio"]').checked = false;
-            currentMainOption = 'acamado';
-            // Uncheck Aluguer Cadeira if it was checked
-            
+    }
+
+    /**
+     * Deselect extra equipment (e.g., aluguer de cadeira or maca) when "autonoma" is selected
+     */
+    function handleExtraDeselection() {
+        const aluguerCadeira = document.querySelector('[data-extra="cadeira"] input[type="checkbox"]');
+        const macaCoquille = document.querySelector('[data-extra="maca"] input[type="checkbox"]');
+
+        if (currentMainOption === 'autonoma') {
+            // Deselect both extras if "autonoma" is selected
+            aluguerCadeira.checked = false;
+            macaCoquille.checked = false;
         }
-          
     }
 });
 
@@ -609,7 +615,6 @@ function handlePayment() {
     document.getElementById('forma-pagamento-h3').style.display = 'none';
     document.getElementById('NIF').style.display = 'none';
     document.getElementById('pay-now-button').style.display = 'none';
-    document.getElementById('back-button-payment').style.display = 'none';
 
     // Get the summary box
     const summaryBox = document.querySelector('#pay-section .summary-box');
@@ -618,7 +623,6 @@ function handlePayment() {
         alert('Ocorreu um erro ao processar o pagamento. Por favor, tente novamente.');
         return;
     }
-
     // Clear the summary box content
     summaryBox.innerHTML = '';
 
@@ -654,6 +658,10 @@ function handlePayment() {
             <p>O pagamento via MBWay está a ser processado. Conclua a transação na sua aplicação MBWay antes que o tempo expire:</p>
             <p id="timer"><strong>Tempo restante:</strong> 05:00</p>
             <p>Após a confirmação do pagamento, enviaremos um email com os detalhes. Obrigado por confiar nos nossos serviços.</p>
+            <!-- Button -->
+                <div class="action-buttons" id="aguardar-button">
+                    <button class="continue-button" style="background-color:#bcbcbc;">AGUARDANDO PAGAMENTO</button>
+                </div>
         `;
 
         const timerElement = document.getElementById('timer');
@@ -682,14 +690,128 @@ function handlePayment() {
             <p>Para concluir o pagamento, clique no link abaixo:</p>
             <p><a href="${paymentLink}" target="_blank" class="payment-link">Concluir Pagamento</a></p>
             <p>Após a confirmação do pagamento, enviaremos um email de confirmação. Obrigado por escolher os nossos serviços.</p>
+            <!-- Button -->
+                <div class="action-buttons" id="aguardar-button">
+                    <button class="continue-button" style="background-color: #bcbcbc;">AGUARDANDO PAGAMENTO</button>
+                </div>
         `;
     } else {
         alert('Método de pagamento inválido. Por favor, tente novamente.');
     }
+
+    // Change the back button's onclick action
+    const backButton = document.getElementById('back-button-payment');
+    if (backButton) {
+        backButton.setAttribute('onclick', 'goBackToPaymentDetails()');
+    }
+}
+
+
+//Go back to payment page details
+function goBackToPaymentDetails() {
+    const paySection = document.getElementById('pay-section');
+    if (!paySection) {
+        console.error('Main content container not found.');
+        return;
+    }
+
+    // Replace the content with the payment HTML
+    paySection.innerHTML = `
+        <div id="pay-section" class="pay-page" style="display: block; padding: 0; width: 100%;">
+            <!-- Header -->
+            <header class="resume-header">
+                <button class="back-button" onclick="goBackToConfirm()" id="back-button-payment">
+                  <img src="Images/back.svg" alt="Back">
+                </button>
+                <h2>Pagamento</h2>
+            </header>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <span class="progress active"></span>
+                <span class="progress active"></span>
+                <span class="progress active"></span>
+                <span class="progress active"></span>
+                <span class="progress active"></span>
+            </div>
+            <p class="progress-title">Pagamento</p>
+
+            <!-- Payment Method Section -->
+            <div class="summary-section">
+                <h3 id="forma-pagamento-h3">Forma de pagamento</h3>
+                <div class="summary-box">
+                    <!-- Pagamento referência multibanco -->
+                    <label class="payment-option">
+                        <div class="main-content">
+                            <div class="option-content">
+                                <img src="Images/icon-multibanco.png" alt="Multibanco Icon">
+                                <p>Pagamento referência multibanco</p>
+                            </div>
+                            <div class="radio-container">
+                                <input type="radio" name="payment-method" value="multibanco" checked>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <!-- Pagamento MBWay -->
+                    <label class="payment-option">
+                        <div class="main-content">
+                            <div class="option-content">
+                                <img src="Images/icon-mbway.png" alt="MBWay Icon">
+                                <p>Pagamento MBWay</p>
+                            </div>
+                            <div class="radio-container">
+                                <input type="radio" name="payment-method" value="mbway" onclick="toggleMbway(this)">
+                            </div>
+                        </div>
+                        <div class="additional-input" id="mbway">
+                            <label for="mbway-phone-number">Número de Telemóvel:</label>
+                            <input type="text" id="mbway-phone-number" placeholder="ex: 987 654 321">
+                        </div>
+                    </label>
+
+                    <!-- Pagamento Link -->
+                    <label class="payment-option">
+                        <div class="main-content">
+                            <div class="option-content">
+                                <img src="Images/icon-link.svg" alt="Link Icon">
+                                <p>Pagamento Link</p>
+                            </div>
+                            <div class="radio-container">
+                                <input type="radio" name="payment-method" value="link">
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="input-group" id="NIF">
+                <label for="phone-number">NIF (Opcional):</label>
+                <input type="text" id="phone-number" placeholder="ex: 987 654 321">
+            </div>
+
+            <!-- Button -->
+            <div class="action-buttons" id="pay-now-button">
+                <button class="continue-button pay-now-button" onclick="handlePayment()">PAGAR AGORA<span id="pay-now-value"></span></button>
+                <!-- <a href="#" class="cancel-link">Cancelar</a> -->
+            </div>
+        </div>
+    `;
 }
 
 
 
+//Botão pagamento efetuado com sucesso
+//<!-- Button -->
+//                <div class="action-buttons" id="sucesso-button">
+//                    <button class="continue-button" style="background-color: #E8F4ED; color: #4FA071;" >PAGAMENTO EFETUADO COM SUCESSO</button>
+//                </div>
+
+//Botão pagamento recusado
+//<!-- Button -->
+//                <div class="action-buttons" id="recusao-button">
+//                    <button class="continue-button" style="background-color: #FBECEF; color: #D74560;" >PAGAMENTO RECUSADO</button>
+//                </div>
 
 
 //APIs------------------------------------------------------------------------------
