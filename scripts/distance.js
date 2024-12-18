@@ -14,6 +14,10 @@ function calculateDistance(pickupPlaceId, destinationPlaceId) {
 
                 // Duration in seconds
                 const durationInSeconds = result.duration.value;
+                const durationText = result.duration.text; // Human-readable duration (e.g., "15 mins")
+
+                //console.log('Duration:', durationInSeconds, 'seconds');
+                //console.log('Duration (text):', durationText);
 
 
                 // Update the price using the distance
@@ -29,24 +33,24 @@ function calculateDistance(pickupPlaceId, destinationPlaceId) {
 }
 
 
-// // Function to update the price of oxygen therapy
-// function updateOxygenPrice(durationInSeconds) {
-//     let price;
+// Function to update the price of oxygen therapy
+function updateOxygenPrice(durationInSeconds) {
+    let price;
 
-//     if (durationInSeconds <= 1800) {
-//         // Less than or equal to 30 minutes
-//         price = 30;
-//     } else {
-//         // More than 30 minutes, calculate price as 1 EUR per minute
-//         const durationInMinutes = Math.ceil(durationInSeconds / 60); // Round up to nearest minute
-//         price = durationInMinutes;
-//     }
+    if (durationInSeconds <= 1800) {
+        // Less than or equal to 30 minutes
+        price = 30;
+    } else {
+        // More than 30 minutes, calculate price as 1 EUR per minute
+        const durationInMinutes = Math.ceil(durationInSeconds / 60); // Round up to nearest minute
+        price = durationInMinutes;
+    }
 
-//     // Update the price in the DOM
-//     const oxygenSection = document.querySelector('[data-extra="oxigenoterapia"] .text h3');
-//     oxygenSection.innerHTML = `Oxigenoterapia + €${price},00`;
+    // Update the price in the DOM
+    const oxygenSection = document.querySelector('[data-extra="oxigenoterapia"] .text h3');
+    oxygenSection.innerHTML = `Oxigenoterapia + €${price},00`;
 
-//     console.log(`Updated oxygen price: €${price}`);
-// }
+    console.log(`Updated oxygen price: €${price}`);
+}
 
 
