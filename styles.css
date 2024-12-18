@@ -21,7 +21,7 @@ body {
 }
 
 :root {
-    --primary-color: #4A90E2;
+    --primary-color: #4F75EC; 
 }
 
 /* ---------------------------------------------
@@ -89,7 +89,7 @@ button,
 .button,
 .continue-button {
     font-weight: 500;
-    background-color: #4A90E2;
+    background-color: #4F75EC;
     color: white;
     font-size: 18px;
     padding: 15px 30px;
@@ -110,7 +110,7 @@ button,
     border: 1px solid var(--primary-color);
     border-radius: 25px;
     background-color: transparent;
-    color: #4A90E2;
+    color: #4F75EC;
     transition: all 0.3s ease;
 }
 
@@ -282,7 +282,7 @@ input[type="radio"]:checked + p {
 
 .input-group label {
     margin-bottom: 5px;
-    color: #4A90E2;
+    color: #4F75EC;
     font-size: 16px;
     white-space: nowrap;
 }
@@ -412,7 +412,7 @@ input[type="radio"]:checked + p {
 
 
 .total-price {
-    color: #4A90E2;
+    color: #4F75EC;
     font-size: 18px;
     font-weight: 700;
 }
@@ -565,7 +565,7 @@ input[type="radio"]:checked + p {
     border: 1px solid var(--primary-color);
     border-radius: 25px;
     background-color: transparent;
-    color: #4A90E2;
+    color: #4F75EC;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -980,7 +980,7 @@ img[src="Images/icon-link.svg"] {
     margin-bottom: 5px;
     padding-left: 5px;
     padding-top: 10px;
-    color: #4A90E2;
+    color: #4F75EC;
 }
 
 .additional-input input[type="text"] {

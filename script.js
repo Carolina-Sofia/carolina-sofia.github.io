@@ -19,8 +19,6 @@ function resetToFirstPage() {
     const today = new Date();
     dateInput.value = today.toISOString().split("T")[0]; 
 
-    // Reset time to default
-    document.getElementById('time').value = '09:00';
 
     // Reset image
     const image = document.getElementById('dynamic-image');
@@ -69,6 +67,7 @@ function changeToResumo() {
 }
 
 //Formatting the date to match both in first page and resumo
+// Formatting the date to match both in first page and resumo
 function formatDate(dateStr) {
     if (!dateStr) return ''; // Handle empty or undefined date
 
@@ -78,13 +77,24 @@ function formatDate(dateStr) {
     return `${day}-${month}-${year}`;
 }
 
+// Set Date and Time to current
 document.addEventListener("DOMContentLoaded", () => {
     const dateInput = document.getElementById("date");
-    const today = new Date();
-    const formattedDate = today.toISOString().split("T")[0]; 
-    dateInput.value = formattedDate; 
+    const timeInput = document.getElementById("time");
 
-    // Existing code for date
+    const now = new Date(); // Date function in JS gives you the current date and time
+    
+    // Set the current date
+    const formattedDate = now.toISOString().split("T")[0];
+    dateInput.value = formattedDate;
+
+    // Set the current time in HH:MM format
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const formattedTime = `${hours}:${minutes}`;
+    timeInput.value = formattedTime;
+
+    // Date picker
     const dateInputGroup = document.getElementById('date-input-group');
     dateInputGroup.addEventListener('click', () => {
         if (typeof dateInput.showPicker === 'function') {
@@ -95,8 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // New code for time
-    const timeInput = document.getElementById('time');
+    // Time picker
     const timeInputGroup = document.getElementById('time-input-group');
     timeInputGroup.addEventListener('click', () => {
         if (typeof timeInput.showPicker === 'function') {
@@ -149,7 +158,6 @@ function goBackToForm() {
     const formattedDate = today.toISOString().split("T")[0]; 
     dateInput.value = formattedDate; 
 
-    document.getElementById('time').value = '09:00';
 
     // Re-disable the Verify Route button since fields are empty now
     const verifyButton = document.getElementById('verify-button');
@@ -388,7 +396,6 @@ function goToConfirm() {
     window.scrollTo(0, 0);
 }
 
-
 // Go back to page Equipment
 function goBackToEquip() {
     document.getElementById('equip-section').style.display = 'block';
@@ -508,7 +515,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
 // Change to Pay Page
 function goToPay() {
     // Hide the details section
@@ -545,7 +551,6 @@ function goToPay() {
     window.scrollTo(0, 0);
 }
 
-
 function goBackToConfirm() {
     document.getElementById('confirm-section').style.display = 'block';
     document.getElementById('pay-section').style.display = 'none';
@@ -581,37 +586,64 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-
-//Clicar no botão pagar agora
-function handlePayment() {
+//Clicar botão pagar agora
+async function handlePayment() {
     // Get the selected payment method
     const selectedMethod = document.querySelector('input[name="payment-method"]:checked');
     if (!selectedMethod) {
-        console.error('No payment method selected.');
         alert('Por favor, selecione um método de pagamento antes de prosseguir.');
         return;
     }
 
+    // Hardcoded order and client info for demonstration
+    const orderId = 'ORDER123';
+    const clientName = 'Nome do Cliente';
+    const clientPhone = '912345678';
 
-    // Handle MBWay phone number validation early
+    // Get total price
+    const totalPriceElement = document.getElementById('total-price-confirmation');
+    let totalPrice = 0;
+    if (totalPriceElement && totalPriceElement.textContent.trim()) {
+        totalPrice = parseFloat(totalPriceElement.textContent.trim().replace(',', '.').replace('€', ''));
+    } else {
+        console.warn('Valor total não encontrado, usando 0');
+    }
+
+    // Validate MBWay phone number if MBWay is selected
     if (selectedMethod.value === 'mbway') {
         const phoneNumberField = document.getElementById('mbway-phone-number');
-        if (!phoneNumberField) {
-            console.error('Phone number input field not found.');
-            alert('Por favor, insira um número de telemóvel válido para concluir o pagamento via MBWay.');
-            return;
-        }
-
-        const phoneNumber = phoneNumberField.value.trim();
-
-        if (!phoneNumber || !/^\d{9}$/.test(phoneNumber)) {
-            alert('Por favor, insira um número de telemóvel válido (9 dígitos) para concluir o pagamento via MBWay.');
-            phoneNumberField.focus();
+        if (!phoneNumberField || !/^\d{9}$/.test(phoneNumberField.value.trim())) {
+            alert('Por favor, insira um número de telemóvel válido (9 dígitos) para MBWay.');
             return;
         }
     }
 
-    // Validation passed; hide unnecessary elements
+    // Attempt to call the appropriate IfThenPay API and update the UI
+    let paymentData; // Will hold the data returned by the API
+    try {
+        if (selectedMethod.value === 'multibanco') {
+            // Generate multibanco reference
+            paymentData = await generateMultibancoReference(orderId, totalPrice, clientName, clientPhone);
+            console.log('Dados Multibanco:', paymentData);
+        } else if (selectedMethod.value === 'mbway') {
+            const phoneNumber = document.getElementById('mbway-phone-number').value.trim();
+            paymentData = await generateMBWayPayment(orderId, totalPrice, phoneNumber);
+            console.log('Dados MBWay:', paymentData);
+        } else if (selectedMethod.value === 'link') {
+            paymentData = await generatePaymentLink(orderId, totalPrice);
+            console.log('Dados Link de Pagamento:', paymentData);
+        } else {
+            console.error('Método de pagamento inválido.');
+            alert('Método de pagamento inválido. Por favor, tente novamente.');
+            return;
+        }
+    } catch (error) {
+        console.error('Erro ao processar pagamento:', error.message);
+        alert('Ocorreu um erro ao processar o pagamento. Verifique o console para mais detalhes.');
+        return;
+    }
+
+    // Hide unnecessary elements after successful API call
     document.getElementById('forma-pagamento-h3').style.display = 'none';
     document.getElementById('NIF').style.display = 'none';
     document.getElementById('pay-now-button').style.display = 'none';
@@ -626,32 +658,24 @@ function handlePayment() {
     // Clear the summary box content
     summaryBox.innerHTML = '';
 
-    // Get the total price
-    const totalPriceElement = document.getElementById('total-price-confirmation');
-    if (!totalPriceElement) {
-        console.error('Total price element not found.');
-        alert('Ocorreu um erro ao obter o valor total. Por favor, tente novamente.');
-        return;
-    }
-
-    const totalPrice = totalPriceElement.textContent ? totalPriceElement.textContent.trim() : 'N/A';
-
-    // Handle payment methods
+    // Update UI based on selected payment method and returned data
     if (selectedMethod.value === 'multibanco') {
-
-        const entidade = 'Placeholder Entidade'; // Replace with API value
-        const referencia = 'Placeholder Referência'; // Replace with API value
+        // paymentData should have Entity, Reference, Amount, etc.
+        const entidade = paymentData.Entity || 'Desconhecido';
+        const referencia = paymentData.Reference || 'Desconhecido';
+        const valor = totalPrice.toFixed(2) + '€';
 
         summaryBox.innerHTML = `
             <p>A sua referência para pagamento Multibanco foi gerada com sucesso. Utilize os dados abaixo para concluir o pagamento:</p>
             <ul>
                 <li><strong>Entidade:</strong> ${entidade}</li>
                 <li><strong>Referência:</strong> ${referencia}</li>
-                <li><strong>Valor:</strong> ${totalPrice}</li>
+                <li><strong>Valor:</strong> ${valor}</li>
             </ul>
             <p>Após o pagamento, receberá um email de confirmação. Obrigado por utilizar os nossos serviços.</p>
         `;
     } else if (selectedMethod.value === 'mbway') {
+        // For MBWay, paymentData may contain transaction details. Just show a timer.
         let timeLeft = 5 * 60; // 5 minutes in seconds
 
         summaryBox.innerHTML = `
@@ -659,17 +683,12 @@ function handlePayment() {
             <p id="timer"><strong>Tempo restante:</strong> 05:00</p>
             <p>Após a confirmação do pagamento, enviaremos um email com os detalhes. Obrigado por confiar nos nossos serviços.</p>
             <!-- Button -->
-                <div class="action-buttons" id="aguardar-button">
-                    <button class="continue-button" style="background-color:#bcbcbc;">AGUARDANDO PAGAMENTO</button>
-                </div>
+            <div class="action-buttons" id="aguardar-button">
+                <button class="continue-button" style="background-color:#bcbcbc;">AGUARDANDO PAGAMENTO</button>
+            </div>
         `;
 
         const timerElement = document.getElementById('timer');
-        if (!timerElement) {
-            console.error('Timer element not found.');
-            return;
-        }
-
         const timerInterval = setInterval(() => {
             const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
             const seconds = (timeLeft % 60).toString().padStart(2, '0');
@@ -682,29 +701,29 @@ function handlePayment() {
                 timerElement.textContent = 'O tempo expirou. Tente novamente.';
             }
         }, 1000);
-    } else if (selectedMethod.value === 'link') {
 
-        const paymentLink = 'https://www.google.com'; // Replace with API link
+    } else if (selectedMethod.value === 'link') {
+        // paymentData should have PaymentUrl
+        const paymentLink = paymentData.PaymentUrl || '#';
 
         summaryBox.innerHTML = `
             <p>Para concluir o pagamento, clique no link abaixo:</p>
             <p><a href="${paymentLink}" target="_blank" class="payment-link">Concluir Pagamento</a></p>
             <p>Após a confirmação do pagamento, enviaremos um email de confirmação. Obrigado por escolher os nossos serviços.</p>
             <!-- Button -->
-                <div class="action-buttons" id="aguardar-button">
-                    <button class="continue-button" style="background-color: #bcbcbc;">AGUARDANDO PAGAMENTO</button>
-                </div>
+            <div class="action-buttons" id="aguardar-button">
+                <button class="continue-button" style="background-color: #bcbcbc;">AGUARDANDO PAGAMENTO</button>
+            </div>
         `;
-    } else {
-        alert('Método de pagamento inválido. Por favor, tente novamente.');
     }
 
-    // Change the back button's onclick action
+    // Change the back button's onclick action to allow going back if needed
     const backButton = document.getElementById('back-button-payment');
     if (backButton) {
         backButton.setAttribute('onclick', 'goBackToPaymentDetails()');
     }
 }
+
 
 
 //Go back to payment page details
