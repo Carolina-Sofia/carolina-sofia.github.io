@@ -62,7 +62,7 @@ function updateTotal() {
     }
 }
 
-// Make updateSummary async so we can await Airtable data loading
+// Make updateSummary async to await Airtable data loading
 async function updateSummary(distanceInMeters) {
     const distanceInKm = (distanceInMeters / 1000).toFixed(2); // Convert meters to kilometers
     console.log(`Distance in km: ${distanceInKm}`);
