@@ -93,9 +93,8 @@ async function generateMBWayPayment(orderId, amount, phoneNumber, email, motivo)
 
 // Generate Credit Card Payment Request
 async function generateCreditCardPayment(orderId, amount, clientName, clientEmail) {
-    const url = 'https://api.ifthenpay.com/ccard/init'; // Check IfThenPay API docs for the correct endpoint
+    const url = `https://api.ifthenpay.com/creditcard/init/${IF_THEN_PAY_CC_KEY}`; 
     const body = {
-        ccKey: IF_THEN_PAY_CC_KEY, // The credit card key
         orderId: orderId,
         amount: amount,
         clientName: clientName,

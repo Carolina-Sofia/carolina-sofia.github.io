@@ -591,6 +591,8 @@ async function handlePayment() {
     let result = null;
     let responsavelResult = null;
     let beneficiarioResult = null;
+    let agendamentoId = null; // Declare here for broader scope
+
 
     // Get the selected payment method
     const selectedMethod = document.querySelector('input[name="payment-method"]:checked');
@@ -732,6 +734,7 @@ async function handlePayment() {
         dataServicoISO, estado, rota, responsavelId, beneficiarioId, utente, formaTransporte, motivo, moradaRecolha, moradaDestino, valorInicialNum
     });
 
+
     try {
         const agendamentoResult = await createAgendamento(
             dataServicoISO,
@@ -747,6 +750,15 @@ async function handlePayment() {
             valorInicialNum
         );
         console.log("Agendamento creation response:", agendamentoResult);
+        // Extract agendamentoId
+
+        if (agendamentoResult && agendamentoResult.records && agendamentoResult.records.length > 0) {
+            agendamentoId = agendamentoResult.records[0].id;
+            console.log("Agendamento created with ID:", agendamentoId);
+        } else {
+            console.error("No Agendamento record created.");
+            return; // Stop if no agendamento was created
+        }
     } catch (error) {
         console.error("Error creating Agendamento:", error);
     }
@@ -787,6 +799,14 @@ async function handlePayment() {
             const entidade = refData.Entity; // Replace with API value
             const referencia = refData.Reference; // Replace with API value
     
+            // Determine plataforma and ifThenPayId
+            const plataforma = "TRANSFERÊNCIA";
+            const ifThenPayId = refData.RequestId; // Check IfThenPay response for the correct field name
+
+            // Create Transação
+            const transacaoResult = await createTransacao(plataforma, responsavelId, agendamentoId, ifThenPayId);
+            console.log("Transação creation response (Multibanco):", transacaoResult);
+
             summaryBox.innerHTML = `
                 <p>A sua referência para pagamento Multibanco foi gerada com sucesso. Utilize os dados abaixo para concluir o pagamento:</p>
                 <ul>
@@ -810,6 +830,14 @@ async function handlePayment() {
             const mbwayData = await generateMBWayPayment(responsavelId, valorInicialNum, mbwayPhoneNumber, email, motivo);
             console.log("MBWay Payment Data:", mbwayData);
             // You can now handle the MBWay transactionId and status.
+            // Determine plataforma and ifThenPayId
+            const plataforma = "MBWay";
+            const ifThenPayId = mbwayData.RequestId; // Check MBWay response fields
+
+            // Create Transação
+            const transacaoResult = await createTransacao(plataforma, responsavelId, agendamentoId, ifThenPayId);
+            console.log("Transação creation response (MBWay):", transacaoResult);
+
         } catch (error) {
             console.error("Error generating MBWay payment:", error);
             alert('Ocorreu um erro ao processar o pagamento MBWay. Por favor, tente novamente mais tarde.');
@@ -844,8 +872,19 @@ async function handlePayment() {
         }, 1000);
     } else if (selectedMethod.value === 'link') {
         try {
-            const linkData = await generatePaymentLink(responsavelId, valorInicialNum);
+            const linkData = await  generateCreditCardPayment(responsavelId, valorInicialNum, userName, email) 
+            
+           
             console.log("Payment Link Data:", linkData);
+
+            // Determine plataforma and ifThenPayId
+            const plataforma = "Link de Pagamento";
+            const ifThenPayId = linkData.RequestId; // Check Payment Link response fields
+
+            // Create Transação
+            const transacaoResult = await createTransacao(plataforma, responsavelId, agendamentoId, ifThenPayId);
+            console.log("Transação creation response (Link):", transacaoResult);
+
     
             // Extract the payment link from linkData. 
             // Check IfThenPay documentation for the exact field name.

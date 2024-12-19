@@ -40,6 +40,7 @@ const baseId = 'appsqaZVX0u2cl39e';
 const utilizadoresTableId = 'tbly9HegklIm8MaOk';
 const beneficiariosTableId = 'tblOc4fZKDHMjzVOK';
 const agendamentosTableId = 'tblT5ETlTfZ1z8lBd';
+const transacaoTableId = 'tblwyZz8UV5q4n89W';
 
 /**
  * Create a Utilizador record.
@@ -250,51 +251,54 @@ async function createAgendamento(dataServico, estado, rota, responsavelId, benef
         console.error('Error creating Agendamento:', error);
         return null;
     }
+    
 }
 
+
+
 //Create transação
-// async function createTransacao(plataforma, responsavelId, agendamentoId, ifThenPayId) {
-//     const url = `https://api.airtable.com/v0/${baseId}/${agendamentosTableId}`;
-//     const headers = {
-//         "Content-Type": "application/json",
-//         "Authorization": `Bearer ${apiKey}`
-//     };
+async function createTransacao(plataforma, responsavelId, agendamentoId, ifThenPayId) {
+    const url = `https://api.airtable.com/v0/${baseId}/${transacaoTableId}`;
+    const headers = {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`
+    };
 
-//     // Build fields
-//     const fields = {
-//         "Estado": "Pendente",  
-//         "Plataforma": plataforma, 
-//         "RESPONSÁVEL": [responsavelId],
-//         "Agendamento": agendamentoId,
-//         "ID Transação": ifThenPayId
-//     };
+    // Build fields
+    const fields = {
+        "Estado": "Pendente",  
+        "Plataforma": plataforma, 
+        "RESPONSÁVEL": [responsavelId],
+        "Agendamento": [agendamentoId],
+        "ID Transação": ifThenPayId
+    };
 
-//     const body = JSON.stringify({
-//         "records": [
-//             {
-//                 "fields": fields
-//             }
-//         ]
-//     });
+    const body = JSON.stringify({
+        "records": [
+            {
+                "fields": fields
+            }
+        ]
+    });
 
-//     try {
-//         const response = await fetch(url, {
-//             method: "POST",
-//             headers: headers,
-//             body: body
-//         });
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: body
+        });
 
-//         if (!response.ok) {
-//             throw new Error(`Error creating Transação: ${response.status} - ${response.statusText}`);
-//         }
+        if (!response.ok) {
+            throw new Error(`Error creating Transação: ${response.status} - ${response.statusText}`);
+        }
 
-//         const result = await response.json();
-//         return result;
-//     } catch (error) {
-//         console.error('Error creating Transação:', error);
-//         return null;
-//     }
-// }
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('Error creating Transação:', error);
+        return null;
+    }
+}
 
 // A helper function to map the transport type from the summary to Airtable's expected value.
 function mapFormaTransporte(originalText) {
