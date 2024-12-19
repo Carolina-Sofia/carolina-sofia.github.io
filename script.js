@@ -166,7 +166,6 @@ function goBackToForm() {
     window.scrollTo(0, 0);
 }
 
-
 // Make sure that addresses are not empty
 function validateForm() {
     const pickup = document.getElementById('pickup').value.trim();
@@ -179,7 +178,6 @@ function validateForm() {
     }
     return { pickup, destination };
 }
-
 
 // Change to page to fill in the details
 function goToDetails() {
@@ -200,7 +198,6 @@ function goToDetails() {
 
     window.scrollTo(0, 0);
 }
-
 
 // Go back to page Resumo
 function goBackToResumo() {
@@ -586,9 +583,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-
-// Clicar no botão pagar agora
+//Clicar botão de pagar agora
 async function handlePayment() {
+    console.log("HandlePayment started...");
+
+    // Declare variables for API responses in this scope
+    let result = null;
+    let responsavelResult = null;
+    let beneficiarioResult = null;
+
     // Get the selected payment method
     const selectedMethod = document.querySelector('input[name="payment-method"]:checked');
     if (!selectedMethod) {
@@ -596,10 +599,11 @@ async function handlePayment() {
         alert('Por favor, selecione um método de pagamento antes de prosseguir.');
         return;
     }
-
+    console.log("Selected payment method:", selectedMethod.value);
 
     // Handle MBWay phone number validation early
     if (selectedMethod.value === 'mbway') {
+        console.log("MBWay payment method selected. Validating phone number...");
         const phoneNumberField = document.getElementById('mbway-phone-number');
         if (!phoneNumberField) {
             console.error('Phone number input field not found.');
@@ -608,12 +612,143 @@ async function handlePayment() {
         }
 
         const phoneNumber = phoneNumberField.value.trim();
+        console.log("Phone number entered:", phoneNumber);
 
         if (!phoneNumber || !/^\d{9}$/.test(phoneNumber)) {
             alert('Por favor, insira um número de telemóvel válido (9 dígitos) para concluir o pagamento via MBWay.');
             phoneNumberField.focus();
             return;
         }
+    }
+
+    // Determine user option
+    const paraMimActive = document.querySelector('.option-button[data-value="para-mim"].active');
+    const paraOutroActive = document.querySelector('.option-button[data-value="para-outro"].active');
+
+    console.log("Option selected:", paraMimActive ? "para-mim" : paraOutroActive ? "para-outro" : "none");
+
+    // Gather fields
+    const userName = document.getElementById('user-name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phoneNumber = document.getElementById('phone-number').value.trim();
+    const weight = document.getElementById('weight').value.trim();
+    const age = document.getElementById('age').value.trim();
+
+    const genderElement = document.getElementById('gender');
+    const gender = genderElement.options[genderElement.selectedIndex].textContent;
+
+    const responsavelName = document.getElementById('responsavel-name').value.trim();
+    const responsavelPhone = document.getElementById('responsavel-phone').value.trim();
+    const responsavelEmail = document.getElementById('responsavel-email').value.trim();
+
+    console.log("Fields gathered:");
+    console.log({ userName, email, phoneNumber, weight, gender, age, responsavelName, responsavelPhone, responsavelEmail });
+
+    // Log Utilizador creation attempt
+    if (paraMimActive) {
+        console.log("Creating Utilizador for para-mim...");
+        try {
+            result = await createUtilizador(userName, email, phoneNumber, true, weight, gender, age);
+            console.log("Utilizador creation response:", result);
+            if (result && result.records && result.records.length > 0) {
+                console.log("Utilizador created:", result.records[0]);
+            }
+        } catch (error) {
+            console.error("Error creating Utilizador for para-mim:", error);
+            return; // Exit if creation fails
+        }
+    } else if (paraOutroActive) {
+        console.log("Creating Utilizador for responsável...");
+        try {
+            responsavelResult = await createUtilizador(responsavelName, responsavelEmail, responsavelPhone, true);
+            console.log("Responsável creation response:", responsavelResult);
+            if (responsavelResult && responsavelResult.records && responsavelResult.records.length > 0) {
+                const responsavelId = responsavelResult.records[0].id;
+                console.log("Responsável created with ID:", responsavelId);
+
+                // Now create beneficiario
+                console.log("Creating Beneficiário...");
+                beneficiarioResult = await createBeneficiario(userName, weight, gender, age, responsavelId);
+                console.log("Beneficiário creation response:", beneficiarioResult);
+                if (beneficiarioResult && beneficiarioResult.records && beneficiarioResult.records.length > 0) {
+                    console.log("Beneficiário created:", beneficiarioResult.records[0]);
+                }
+            }
+        } catch (error) {
+            console.error("Error creating Utilizador or Beneficiário for para-outro:", error);
+            return; // Exit if creation fails
+        }
+    }
+
+    // IDs for Agendamento
+    let responsavelId = null;
+    let beneficiarioId = null;
+
+
+    if (paraMimActive) {
+        if (result && result.records && result.records.length > 0) {
+            responsavelId = result.records[0].id;
+        }
+    } else if (paraOutroActive) {
+        if (responsavelResult && responsavelResult.records && responsavelResult.records.length > 0) {
+            responsavelId = responsavelResult.records[0].id;
+        }
+        if (beneficiarioResult && beneficiarioResult.records && beneficiarioResult.records.length > 0) {
+            beneficiarioId = beneficiarioResult.records[0].id;
+        }
+    }
+
+    let utente = null;
+
+    if (paraMimActive) {
+        utente = "PRÓPRIO";
+
+
+    } else if (paraOutroActive) {
+        utente = "BENEFICIÁRIO";
+    }
+
+    const dateInput = document.getElementById("date").value.trim();
+    const timeInput = document.getElementById("time").value.trim();
+    const dataServicoISO = `${dateInput}T${timeInput}:00`; // ISO 8601 format
+
+    console.log("Formatted Date and Time for Agendamento:", dataServicoISO);
+
+    const estado = "Solicitado";
+    const roundTripChecked = document.getElementById('round-trip-toggle').checked;
+    const rota = roundTripChecked ? "Ida + Retorno" : "Ida";
+    const formaText = document.getElementById('forma-summary').textContent.trim();
+    const formaTransporte = mapFormaTransporte(formaText);
+    const motivo = document.getElementById('motivo-summary').textContent.trim();
+    const moradaRecolha = document.getElementById('pickup-summary2').textContent.trim();
+    const moradaDestino = document.getElementById('destination-summary2').textContent.trim();
+    const valorInicialStr = document.getElementById('total-price-confirmation').textContent.trim();
+    const valorInicialNum = parseFloat(valorInicialStr.replace("€", "").replace(",", "."));
+
+    const mbwayPhoneNumber = document.getElementById('mbway-phone-number').value.trim();
+
+    console.log("Data being sent to createAgendamento:");
+    console.log({
+        dataServicoISO, estado, rota, responsavelId, beneficiarioId, utente, formaTransporte, motivo, moradaRecolha, moradaDestino, valorInicialNum
+    });
+
+    try {
+        const agendamentoResult = await createAgendamento(
+            dataServicoISO,
+            estado,
+            rota,
+            responsavelId,
+            beneficiarioId,
+            utente,
+            formaTransporte,
+            motivo,
+            moradaRecolha,
+            moradaDestino,
+            valorInicialNum
+        );
+        console.log("Agendamento creation response:", agendamentoResult);
+    } catch (error) {
+        console.error("Error creating Agendamento:", error);
     }
 
     // Validation passed; hide unnecessary elements
@@ -641,24 +776,44 @@ async function handlePayment() {
 
     const totalPrice = totalPriceElement.textContent ? totalPriceElement.textContent.trim() : 'N/A';
 
+   
+
     // Handle payment methods
     if (selectedMethod.value === 'multibanco') {
-
-        const entidade = 'Placeholder Entidade'; // Replace with API value
-        const referencia = 'Placeholder Referência'; // Replace with API value
-
-        summaryBox.innerHTML = `
-            <p>A sua referência para pagamento Multibanco foi gerada com sucesso. Utilize os dados abaixo para concluir o pagamento:</p>
-            <ul>
-                <li><strong>Entidade:</strong> ${entidade}</li>
-                <li><strong>Referência:</strong> ${referencia}</li>
-                <li><strong>Valor:</strong> ${totalPrice}</li>
-            </ul>
-            <p>Após o pagamento, receberá um email de confirmação. Obrigado por utilizar os nossos serviços.</p>
-        `;
+        try {
+            const refData = await generateMultibancoReference(responsavelId, valorInicialNum, userName, phoneNumber);
+            
+            console.log("Multibanco Reference Data:", refData);
+            const entidade = refData.Entity; // Replace with API value
+            const referencia = refData.Reference; // Replace with API value
+    
+            summaryBox.innerHTML = `
+                <p>A sua referência para pagamento Multibanco foi gerada com sucesso. Utilize os dados abaixo para concluir o pagamento:</p>
+                <ul>
+                    <li><strong>Entidade:</strong> ${entidade}</li>
+                    <li><strong>Referência:</strong> ${referencia}</li>
+                    <li><strong>Valor:</strong> ${totalPrice}</li>
+                </ul>
+                <p>Após o pagamento, receberá um email de confirmação. Obrigado por utilizar os nossos serviços.</p>
+            `;
+            
+            // You can now display the Entity and Reference to the user.
+        } catch (error) {
+            console.error("Error generating Multibanco reference:", error);
+            alert('Ocorreu um erro ao gerar a referência Multibanco. Por favor, tente novamente mais tarde.');
+        }
+    
+      
     } else if (selectedMethod.value === 'mbway') {
         let timeLeft = 5 * 60; // 5 minutes in seconds
-
+        try {
+            const mbwayData = await generateMBWayPayment(responsavelId, valorInicialNum, mbwayPhoneNumber, email, motivo);
+            console.log("MBWay Payment Data:", mbwayData);
+            // You can now handle the MBWay transactionId and status.
+        } catch (error) {
+            console.error("Error generating MBWay payment:", error);
+            alert('Ocorreu um erro ao processar o pagamento MBWay. Por favor, tente novamente mais tarde.');
+        }
         summaryBox.innerHTML = `
             <p>O pagamento via MBWay está a ser processado. Conclua a transação na sua aplicação MBWay antes que o tempo expire:</p>
             <p id="timer"><strong>Tempo restante:</strong> 05:00</p>
@@ -688,18 +843,31 @@ async function handlePayment() {
             }
         }, 1000);
     } else if (selectedMethod.value === 'link') {
-
-        const paymentLink = 'https://www.google.com'; // Replace with API link
-
-        summaryBox.innerHTML = `
-            <p>Para concluir o pagamento, clique no link abaixo:</p>
-            <p><a href="${paymentLink}" target="_blank" class="payment-link">Concluir Pagamento</a></p>
-            <p>Após a confirmação do pagamento, enviaremos um email de confirmação. Obrigado por escolher os nossos serviços.</p>
-            <!-- Button -->
+        try {
+            const linkData = await generatePaymentLink(responsavelId, valorInicialNum);
+            console.log("Payment Link Data:", linkData);
+    
+            // Extract the payment link from linkData. 
+            // Check IfThenPay documentation for the exact field name.
+            const paymentLink = linkData.PaymentUrl; // or linkData.paymentUrl if that's how the API returns it.
+    
+            summaryBox.innerHTML = `
+                <p>Por favor complete o pagamento:</p>
+                    <iframe src="${paymentLink}" 
+                            style="width:100%; height:600px; border:none;" 
+                            allow="payment" 
+                            sandbox="allow-same-origin allow-scripts allow-forms allow-popups">
+                    </iframe>
+                <p>Após a confirmação do pagamento, enviaremos um email de confirmação. Obrigado por escolher os nossos serviços.</p>
+                <!-- Button -->
                 <div class="action-buttons" id="aguardar-button">
                     <button class="continue-button" style="background-color: #bcbcbc;">AGUARDANDO PAGAMENTO</button>
                 </div>
-        `;
+            `;
+        } catch (error) {
+            console.error("Error generating payment link:", error);
+            alert('Ocorreu um erro ao gerar o link de pagamento. Por favor, tente novamente mais tarde.');
+        }
     } else {
         alert('Método de pagamento inválido. Por favor, tente novamente.');
     }
@@ -709,7 +877,11 @@ async function handlePayment() {
     if (backButton) {
         backButton.setAttribute('onclick', 'goBackToPaymentDetails()');
     }
+
 }
+
+
+
 
 //Go back to payment page details
 function goBackToPaymentDetails() {
