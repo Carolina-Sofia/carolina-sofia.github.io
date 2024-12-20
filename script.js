@@ -725,7 +725,7 @@ async function handlePayment() {
     const moradaRecolha = document.getElementById('pickup-summary2').textContent.trim();
     const moradaDestino = document.getElementById('destination-summary2').textContent.trim();
     const valorInicialStr = document.getElementById('total-price-confirmation').textContent.trim();
-    const valorInicialNum = parseFloat(valorInicialStr.replace("€", "").replace(",", "."));
+    const valorInicialNum = parseFloat(valorInicialStr.replace("€", "").replace(",", ".")); //MUDAR AQUI PARA TESTESMBWAY
     const observacoes = document.getElementById('observacoes').value.trim();
     const compdes = document.getElementById('compdes').value.trim();
     const comprec = document.getElementById('comprec').value.trim();
@@ -834,10 +834,11 @@ async function handlePayment() {
     
       
     } else if (selectedMethod.value === 'mbway') {
-        let timeLeft = 5 * 60; // 5 minutes in seconds
+        let timeLeft = 4 * 60; // 4 minutes in seconds
         try {
             const mbwayData = await generateMBWayPayment(responsavelId, valorInicialNum, mbwayPhoneNumber, email, motivo);
             console.log("MBWay Payment Data:", mbwayData);
+            window.currentMBWayRequestId = mbwayData.RequestId;
             // You can now handle the MBWay transactionId and status.
             // Determine plataforma and ifThenPayId
             const plataforma = "MBWay";
@@ -846,6 +847,7 @@ async function handlePayment() {
             // Create Transação
             const transacaoResult = await createTransacao(plataforma, responsavelId, agendamentoId, ifThenPayId);
             console.log("Transação creation response (MBWay):", transacaoResult);
+            
 
         } catch (error) {
             console.error("Error generating MBWay payment:", error);
@@ -853,11 +855,11 @@ async function handlePayment() {
         }
         summaryBox.innerHTML = `
             <p>O pagamento via MBWay está a ser processado. Conclua a transação na sua aplicação MBWay antes que o tempo expire:</p>
-            <p id="timer"><strong>Tempo restante:</strong> 05:00</p>
+            <p id="timer"><strong>Tempo restante:</strong> 04:00</p>
             <p>Após a confirmação do pagamento, enviaremos um email com os detalhes. Obrigado por confiar nos nossos serviços.</p>
             <!-- Button -->
                 <div class="action-buttons" id="aguardar-button">
-                    <button class="continue-button" style="background-color:#bcbcbc;">AGUARDANDO PAGAMENTO</button>
+                    <button class="continue-button" id="ja-paguei-button" style="background-color:#bcbcbc;" onclick="confirmMBWayStatus()">JÁ PAGUEI</button>
                 </div>
         `;
 

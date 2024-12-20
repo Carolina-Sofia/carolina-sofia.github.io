@@ -63,34 +63,6 @@ async function generateMBWayPayment(orderId, amount, phoneNumber, email, motivo)
     return data; // { transactionId, status, etc. }
 }
 
-// Generate Payment Link
-// async function generatePaymentLink(orderId, amount) {
-//     const url = `https://api.ifthenpay.com/creditcard/init/${IF_THEN_PAY_CC_KEY}`;
-//     const body = {
-//         orderId: orderId,
-//         amount: amount,
-//         successUrl: 'https://www.ambula.pt/pagamento-aprovado/',
-//         errorUrl: 'https://www.ambula.pt',
-//         cancelUrl: 'https://www.ambula.pt/pagamento-recusado/',
-//         language: 'pt'
-//     };
-
-//     const response = await fetch(url, {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify(body),
-//     });
-
-//     const data = await response.json();
-//     if (!response.ok) {
-//         console.error('Erro ao gerar link de pagamento:', data);
-//         throw new Error(data.message || 'Falha ao obter link de pagamento.');
-//     }
-
-//     console.log('Payment Link Data:', data);
-//     return data; // { PaymentUrl, ... }
-// }
-
 // Generate Credit Card Payment Request
 async function generateCreditCardPayment(orderId, amount, clientName, clientEmail) {
     const url = `https://api.ifthenpay.com/creditcard/init/${IF_THEN_PAY_CC_KEY}`; 
@@ -119,4 +91,71 @@ async function generateCreditCardPayment(orderId, amount, clientName, clientEmai
 
     console.log('Credit Card Payment Data:', data);
     return data; // { PaymentUrl, status, etc. }
+}
+
+// Confirm MBWay Status
+async function confirmMBWayStatus() {
+    console.log("Checking MBWay payment status...");
+
+    try {
+        // Call the confirmMBWayPayment function from payment.js
+        const data = await confirmMBWayPayment();
+        console.log('MBWay Status Response:', data);
+
+        const summaryBox = document.querySelector('#pay-section .summary-box');
+        if (!summaryBox) {
+            console.error('summaryBox not found.');
+            return;
+        }
+
+        if (data.Status === '000') {
+            // Payment confirmed
+            summaryBox.innerHTML = `
+                <p>Pagamento confirmado com sucesso!</p>
+                <div class="action-buttons" id="sucesso-button">
+                    <button class="continue-button" style="background-color: #E8F4ED; color: #4FA071;" disabled>PAGAMENTO EFETUADO COM SUCESSO</button>
+                </div>
+            `;
+        } else if (data.Status === '101') {
+            // Payment expired
+            summaryBox.innerHTML = `
+                <p>O tempo para efetuar o pagamento expirou. Por favor, tente novamente.</p>
+                <div class="action-buttons" id="expirado-button">
+                    <button class="continue-button" style="background-color: #FBECEF; color: #D74560;" disabled>PAGAMENTO EXPIRADO</button>
+                </div>
+            `;
+        } else if (data.Status === '020' || data.Status === '122') {
+            // Payment rejected or declined
+            summaryBox.innerHTML = `
+                <p>O pagamento foi recusado. Por favor, tente novamente.</p>
+                <div class="action-buttons" id="recusado-button">
+                    <button class="continue-button" style="background-color: #FBECEF; color: #D74560;" disabled>PAGAMENTO RECUSADO</button>
+                </div>
+            `;
+        } else {
+            // Any other status
+            alert(`Estado do pagamento: ${data.Message} (código: ${data.Status})`);
+        }
+    } catch (error) {
+        console.error("Erro ao verificar o status MBWay:", error);
+        alert('Ocorreu um erro ao verificar o estado do pagamento MBWay. Tente novamente mais tarde.');
+    }
+}
+
+
+// Confirm MBWay payment
+async function confirmMBWayPayment() {
+    // Replace these with the actual mbWayKey and requestId
+    // You must store the RequestId from when you initiated the MBWay payment.
+    // For example, if mbwayData.RequestId = 'i2szvoUfPYBMWdSxqO3n', store it globally or pass it somehow.
+    const requestId = window.currentMBWayRequestId;// The RequestId you got from generateMBWayPayment
+
+    const url = `https://api.ifthenpay.com/spg/payment/mbway/status?mbWayKey=${IF_THEN_PAY_MBWAY_KEY}&requestId=${requestId}`;
+    const options = { method: 'GET' };
+
+    const response = await fetch(url, options);
+    const data = await response.json();
+    console.log(data);
+    // Return the data so confirmMBWayStatus can process it
+    return data;
 }
