@@ -200,7 +200,7 @@ async function createBeneficiario(nome, peso, sexo, idade, responsavelId) {
  * "MORADA DE DESTINO" = destination-summary
  * "VALOR INICIAL" = total-price-confirmation (remove € and convert to number)
  */
-async function createAgendamento(dataServico, estado, rota, responsavelId, beneficiarioId, utente, formaTransporte, motivo, moradaRecolha, moradaDestino, valorInicial) {
+async function createAgendamento(dataServico, estado, rota, responsavelId, observacoes, beneficiarioId, utente, formaTransporte, motivo, moradaRecolha, comprec, moradaDestino, compdes, valorInicial, nif) {
     const url = `https://api.airtable.com/v0/${baseId}/${agendamentosTableId}`;
     const headers = {
         "Content-Type": "application/json",
@@ -213,12 +213,16 @@ async function createAgendamento(dataServico, estado, rota, responsavelId, benef
         "ESTADO": estado,
         "ROTA": rota,
         "RESPONSÁVEL": [responsavelId],
+        "OBSERVAÇÕES": observacoes,
         "UTENTE": utente,
         "FORMA DE TRANSPORTE": formaTransporte,
         "MOTIVO": motivo,
         "MORADA DE RECOLHA": moradaRecolha,
+        "COMPLEMENTO RECOLHA":comprec,
         "MORADA DE DESTINO": moradaDestino,
-        "VALOR INICIAL": valorInicial
+        "COMPLEMENTO DESTINO": compdes,
+        "VALOR INICIAL": valorInicial,
+        "NIF": nif
     };
 
     // If beneficiarioId is provided, add it

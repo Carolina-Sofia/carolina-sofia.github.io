@@ -726,12 +726,17 @@ async function handlePayment() {
     const moradaDestino = document.getElementById('destination-summary2').textContent.trim();
     const valorInicialStr = document.getElementById('total-price-confirmation').textContent.trim();
     const valorInicialNum = parseFloat(valorInicialStr.replace("€", "").replace(",", "."));
+    const observacoes = document.getElementById('observacoes').value.trim();
+    const compdes = document.getElementById('compdes').value.trim();
+    const comprec = document.getElementById('comprec').value.trim();
+    const nif = document.getElementById('nif').value.trim();
+
 
     const mbwayPhoneNumber = document.getElementById('mbway-phone-number').value.trim();
 
     console.log("Data being sent to createAgendamento:");
     console.log({
-        dataServicoISO, estado, rota, responsavelId, beneficiarioId, utente, formaTransporte, motivo, moradaRecolha, moradaDestino, valorInicialNum
+        dataServicoISO, estado, rota, responsavelId, beneficiarioId, utente, formaTransporte, motivo, moradaRecolha, moradaDestino, valorInicialNum, observacoes, compdes, comprec, nif
     });
 
 
@@ -741,13 +746,17 @@ async function handlePayment() {
             estado,
             rota,
             responsavelId,
+            observacoes,
             beneficiarioId,
             utente,
             formaTransporte,
             motivo,
             moradaRecolha,
+            comprec,
             moradaDestino,
-            valorInicialNum
+            compdes,
+            valorInicialNum,
+            nif
         );
         console.log("Agendamento creation response:", agendamentoResult);
         // Extract agendamentoId
