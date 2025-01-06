@@ -1046,16 +1046,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializePlacesAutocomplete();
     
     // Load pricing variables from Airtable
-    await loadPricingFromAirtable('recBG03zIEKzXcj1V'); // Use the actual record ID
-    
-    // At this point, basePrice, pricePerKm, cleaningFee are updated.
-    // Any calculations that depend on these should now use the updated values.
+    await loadPricingFromAirtable('recBG03zIEKzXcj1V'); // Record ID of the pricing
+
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM fully loaded, now calling Airtable...');
-    const recordId = 'recBG03zIEKzXcj1V'; // or your actual record ID
+    const recordId = 'recBG03zIEKzXcj1V';
     await loadPricingFromAirtable(recordId);
-    // After loading from Airtable, basePrice should be updated.
     console.log('basePrice after Airtable:', basePrice);
 });
