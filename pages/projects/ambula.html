@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carolina's Portfolio - Ambula</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../../styles.css" />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <!-- Montserrat Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+  </head>
+
+  <body class="d-flex flex-column min-vh-100">
+    <!-- Header -->
+    <header
+      class="custom-header d-flex flex-wrap justify-content-center py-3 pb-4"
+    >
+      <a
+        href="/"
+        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
+      >
+        <span class="fs-4">Carolina's Portfolio</span>
+      </a>
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a href="/" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item">
+          <a href="/pages/resume.html" class="nav-link">Resume</a>
+        </li>
+        <li class="nav-item">
+          <a href="/pages/projects/" class="nav-link active" aria-current="page"
+            >Projects</a
+          >
+        </li>
+        <li class="nav-item">
+          <a href="/pages/about.html" class="nav-link">About Me</a>
+        </li>
+        <li class="nav-item">
+          <a href="/pages/contact.html" class="nav-link">Contact</a>
+        </li>
+      </ul>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+      <!-- Project Heading -->
+      <div class="text-center mb-5">
+        <h1>Ambula</h1>
+      </div>
+
+      <!-- Project Overview Section -->
+      <section id="project-overview" class="mb-5">
+        <h2>Project Overview</h2>
+        <p>
+          <strong>Ambula</strong> is a platform designed to simplify
+          transportation scheduling and management, specifically focusing on
+          ambulance services. I developed it as a solo project for my 3-month
+          internship at Ambula, handling everything from front-end UI to
+          back-end architecture and database integrations.
+        </p>
+        <p>Key highlights:</p>
+        <ul>
+          <li>
+            <strong>Multi-step scheduling flow</strong> – leveraging
+            Node.js/Express, EJS templating, and session management.
+          </li>
+          <li>
+            <strong>Third-party integrations</strong> – with Google Maps for
+            distance calculations, Airtable for data/pricing, and IfThenPay for
+            secure payments.
+          </li>
+          <li>
+            <strong>Production-ready</strong> – managing real user bookings and
+            payments.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Skills Section (Matching Resume Style) -->
+      <section id="skills" class="mb-5">
+        <h2>Skills Used in This Project</h2>
+        <!-- Example card layout, similar to your resume approach -->
+        <div class="row g-4">
+          <!-- Front-End Development -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Front-End Development</h5>
+                <ul class="list-unstyled">
+                  <li>
+                    <i
+                      class="bi bi-circle-fill me-2 sub-item-icon"
+                      aria-hidden="true"
+                    ></i
+                    >HTML5 &amp; CSS3
+                  </li>
+                  <li>
+                    <i
+                      class="bi bi-circle-fill me-2 sub-item-icon"
+                      aria-hidden="true"
+                    ></i
+                    >JavaScript (ES6+)
+                  </li>
+                  <li>
+                    <i
+                      class="bi bi-circle-fill me-2 sub-item-icon"
+                      aria-hidden="true"
+                    ></i
+                    >EJS Templating
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- Back-End Development -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Back-End Development</h5>
+                <ul class="list-unstyled">
+                  <li>
+                    <i
+                      class="bi bi-circle-fill me-2 sub-item-icon"
+                      aria-hidden="true"
+                    ></i
+                    >Node.js &amp; Express
+                  </li>
+                  <li>
+                    <i
+                      class="bi bi-circle-fill me-2 sub-item-icon"
+                      aria-hidden="true"
+                    ></i
+                    >Session Management (express-session)
+                  </li>
+                  <li>
+                    <i
+                      class="bi bi-circle-fill me-2 sub-item-icon"
+                      aria-hidden="true"
+                    ></i
+                    >RESTful APIs
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- Databases & Integrations -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Database &amp; Integrations</h5>
+                <ul class="list-unstyled">
+                  <li>
+                    <i
+                      class="bi bi-circle-fill me-2 sub-item-icon"
+                      aria-hidden="true"
+                    ></i
+                    >Airtable (Data &amp; Pricing)
+                  </li>
+                  <li>
+                    <i
+                      class="bi bi-circle-fill me-2 sub-item-icon"
+                      aria-hidden="true"
+                    ></i
+                    >Google Maps API (Distance Calculations)
+                  </li>
+                  <li>
+                    <i
+                      class="bi bi-circle-fill me-2 sub-item-icon"
+                      aria-hidden="true"
+                    ></i
+                    >IfThenPay (Payment Processing)
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Key Features & Functionality -->
+      <section id="features" class="mb-5">
+        <h2>Key Features</h2>
+        <ul>
+          <li>
+            <strong>Comprehensive Scheduling Process:</strong> A multi-step flow
+            (pickup/destination, user data, transport details, payment) ensuring
+            user data is collected, validated, and stored efficiently.
+          </li>
+          <li>
+            <strong>Dynamic Pricing:</strong> Real-time fare calculation based
+            on distance (Google Maps) and configurable pricing variables
+            (Airtable).
+          </li>
+          <li>
+            <strong>Secure Payment:</strong> Integration with IfThenPay to
+            generate references (Multibanco, PinPay), recording transactions and
+            statuses in Airtable.
+          </li>
+          <li>
+            <strong>Responsive UI &amp; Validation:</strong> User-friendly forms
+            with real-time checks and progressive data storage (session-based).
+          </li>
+        </ul>
+      </section>
+
+      <!-- Multi-Step Workflow Section -->
+      <section id="workflow" class="mb-5">
+        <h2>Multi-Step Workflow</h2>
+        <p>
+          Ambula’s scheduling is split into distinct EJS views, each collecting
+          necessary data while updating both <em>session</em> and
+          <em>Airtable</em> records:
+        </p>
+        <ol>
+          <li>
+            <strong>Step 1:</strong> Pickup/Destination/Date/Time → Saves in
+            session.
+          </li>
+          <li>
+            <strong>Step 1.1:</strong> User details → Creates/updates a
+            “Utilizadores” record, then creates “Agendamento” in Airtable with
+            status <em>Simulação</em>.
+          </li>
+          <li>
+            <strong>Step 2:</strong> Pricing summary (distance-based) → Option
+            for round-trip (+ discount logic), updates
+            <em>Agendamentos</em> with initial price.
+          </li>
+          <li>
+            <strong>Step 3:</strong> Personal/beneficiary details (age, gender,
+            etc.) → Links “Beneficiários” or “Utilizadores” to the
+            “Agendamento.”
+          </li>
+          <li>
+            <strong>Step 4:</strong> Transport type (ambulance/adapted vehicle)
+            &amp; extras selection → Adjusts final price, updates Airtable.
+          </li>
+          <li>
+            <strong>Step 5:</strong> Final confirmation → Summarizes all
+            details, updates <em>Agendamento</em> with final transport choice
+            and notes.
+          </li>
+          <li>
+            <strong>Step 6:</strong> Payment selection → Integrates IfThenPay,
+            creates new “Transações” record with status <em>Pendente</em>,
+            updates <em>Agendamento</em> to <em>Espera</em>.
+          </li>
+        </ol>
+      </section>
+
+      <!-- My Contributions Section -->
+      <section id="my-contribution" class="mb-5">
+        <h2>My Contributions (Solo Project)</h2>
+        <ul>
+          <li>
+            <strong>Full-Stack Development:</strong> From front-end EJS
+            templates, form validation, and session flow to Node.js backend
+            architecture and routing.
+          </li>
+          <li>
+            <strong>Airtable &amp; Google Maps Integration:</strong> Managing
+            database operations (CRUD), dynamic distance-based pricing, and
+            real-time data sync in Airtable.
+          </li>
+          <li>
+            <strong>IfThenPay Payment Flow:</strong> Generating and validating
+            payment references (Multibanco, PinPay), updating transaction
+            statuses in Airtable, and handling server callbacks.
+          </li>
+          <li>
+            <strong>Ongoing Maintenance &amp; Debugging:</strong> Set up robust
+            console and error handling, responding to real-time user feedback
+            for iterative improvements.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Challenges & Learnings -->
+      <section id="challenges" class="mb-5">
+        <h2>Challenges &amp; Learnings</h2>
+        <ul>
+          <li>
+            <strong>Complex Third-Party Integrations:</strong> Ensuring seamless
+            data flow among Google Maps, Airtable, and IfThenPay without
+            blocking or crashing the Node server.
+          </li>
+          <li>
+            <strong>Multi-Step Session Workflow:</strong> Ensuring partial user
+            data is always available at each step while maintaining data
+            integrity in production.
+          </li>
+          <li>
+            <strong>Scalability &amp; User Feedback:</strong> Continually
+            refining the interface and logic based on real-time usage data and
+            new feature requests.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Project Impact & Results -->
+      <section id="impact" class="mb-5">
+        <h2>Project Impact</h2>
+        <ul>
+          <li>
+            <strong>Improved Efficiency:</strong> Automated scheduling
+            drastically reduced manual phone calls and paperwork.
+          </li>
+          <li>
+            <strong>Enhanced User Experience:</strong> The step-by-step
+            interface simplified complex forms, improving user satisfaction.
+          </li>
+          <li>
+            <strong>Real-World Monetization:</strong> IfThenPay integration
+            enabled seamless digital transactions, boosting revenue collection.
+          </li>
+          <li>
+            <strong>Robust &amp; Scalable:</strong> The platform can handle
+            higher volumes of appointments and payments as the service expands.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Live Project & Code Links -->
+      <section id="project-links" class="mb-5">
+        <h2>See Ambula in Action</h2>
+        <p>
+          <i class="bi bi-arrow-right-circle"></i>
+          <a href="https://web.ambula.pt" target="_blank">Live Project Link</a>
+        </p>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto py-3 bg-light">
+      <div class="container text-center">
+        <p class="mb-0">
+          &copy; 2025 Carolina Bernardes Carvalho. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Script -->
+    <script src="script.js"></script>
+  </body>
+</html>

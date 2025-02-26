@@ -2,52 +2,47 @@
          RESET & GLOBAL VARIABLES
 --------------------------------------------- */
 :root {
-    --background-color: #F9E6CF; 
-    --orange: #FAC67A;
-    --pink: #DA498D;
-    --purple: #69247C;
+  --background-color: #f9e6cf;
+  --orange: #fac67a;
+  --pink: #da498d;
+  --purple: #69247c;
 }
-
 
 body {
-    font-family: "Montserrat", serif !important;
-    font-optical-sizing: auto;
-    font-weight: 100;
-    font-style: normal;
-    color: var(--pink);
+  font-family: "Montserrat", serif !important;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+  color: var(--pink);
 }
-
-<<<<<<< HEAD
-=======
-:root {
-    --primary-color: #4F75EC; 
-}
->>>>>>> 84856b9d26b0f41b195b84063708dd3aa7641328
 
 /* ---------------------------------------------
                 TYPOGRAPHY
 --------------------------------------------- */
-h1, h2, h3, p {
-    line-height: 1.6;
-    color: var(--pink);
-    text-align: center;
+h1,
+h2,
+h3,
+p {
+  line-height: 1.6;
+  color: var(--pink);
+  text-align: center;
 }
 
 h1 {
-    font-size: 20px;
-    font-weight: 700;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 h2 {
-    font-size: 20px;
-    font-weight: bold;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 h3 {
-    font-size: 16px;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    font-weight: 700;
+  font-size: 16px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: 700;
 }
 
 /* ---------------------------------------------
@@ -55,94 +50,117 @@ h3 {
 --------------------------------------------- */
 
 .custom-header {
-    border: var(--purple);
-    background-color: var(--background-color);
+  border: var(--purple);
+  background-color: var(--background-color);
 }
 
 /* Navigation Links - Normal State */
 .custom-header .nav-link {
-    color: var(--pink);
+  color: var(--pink);
 }
 
 /* Navigation Links - Hover State */
 .custom-header .nav-link:hover {
-    color: var(--purple);
+  color: var(--purple);
 }
 
 /* Adjust the title text color */
 .custom-header a .fs-4 {
-    color: var(--pink); 
+  color: var(--pink);
 }
 
 /* Home Button */
 .nav-pills .nav-link.active {
-    color: var(--background-color) !important;
-    background-color: var(--pink) !important;
+  color: var(--background-color) !important;
+  background-color: var(--pink) !important;
 }
 
 /* Home Button - Hover State */
 .nav-pills .nav-link.active:hover {
-    color: var(--background-color) !important;
-    background-color: var(--purple) !important;
+  color: var(--background-color) !important;
+  background-color: var(--purple) !important;
 }
 
 /* ---------------------------------------------
               Hero Styles
 --------------------------------------------- */
-.hi{
-    color: var(--pink);
+.hi {
+  color: var(--pink);
 }
 
-.profile-pic{
-    border-radius: 50%;
+.profile-pic {
+  border-radius: 50%;
 }
 
 body > header > a > span {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 .sub-item-icon {
-    font-size: 0.5rem;
-    color: var(--pink) !important; /* Replace with your desired color code */
+  font-size: 0.5rem;
+  color: var(--pink) !important; /* Replace with your desired color code */
 }
 
 /* Double check */
 .section-title {
-    border-bottom: 2px solid #343a40;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    color: #343a40;
+  border-bottom: 2px solid #343a40;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  color: #343a40;
 }
 .icon {
-    margin-right: 8px;
+  margin-right: 8px;
 }
-
 
 /* Skill Category Icons */
 .skill-icon {
-    font-size: 2rem;
-    color: var(--pink); 
-    transition: color 0.3s ease;
+  font-size: 2rem;
+  color: var(--pink);
+  transition: color 0.3s ease;
 }
 
 .skill-icon:hover {
-    color: #0b5ed7; /* Darker shade on hover */
+  color: #0b5ed7; /* Darker shade on hover */
 }
 
 /* Sub-Item Icons */
 .sub-item-icon {
-    font-size: 0.5rem;
-    color: #0d6efd; /* Consistent with parent icon color */
+  font-size: 0.5rem;
+  color: #0d6efd; /* Consistent with parent icon color */
 }
 
 /* Optional: Card Hover Effect */
 .card:hover {
-    transform: translateY(-5px);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* Optional: Adjust Card Padding */
 .card-body {
-    padding: 1.5rem;
+  padding: 1.5rem;
+}
+
+.linkedin-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  background-color: #0a66c2;
+  color: white;
+  font-family: "Arial", sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.linkedin-button:hover {
+  background-color: #084594;
+}
+
+.linkedin-logo {
+  width: 20px;
+  height: 20px;
 }
