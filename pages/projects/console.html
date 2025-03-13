@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Carolina's Portfolio - Ambula</title>
+    <title>Carolina's Portfolio - console.log(myFeelings)</title>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../../styles.css" />
     <!-- Bootstrap CSS -->
@@ -119,40 +119,42 @@
     <main class="container my-5">
       <!-- Project Heading -->
       <div class="text-center mb-5">
-        <h1>Ambula</h1>
+        <h1>console.log(myFeelings)</h1>
       </div>
 
       <!-- Project Overview Section -->
       <section id="project-overview" class="mb-5">
         <h2>Project Overview</h2>
         <p>
-          <strong>Ambula</strong> is a platform designed to simplify
-          transportation scheduling and management, specifically focusing on
-          ambulance services. I developed it as a solo project for my 3-month
-          internship at Ambula, handling everything from front-end UI to
-          back-end architecture and database integrations.
+          <strong>console.log(myFeelings)</strong> is a Node.js web application
+          designed to promote daily self-reflection by prompting users with
+          questions about their day and saving their short answers. I developed
+          this project to deepen my understanding of Express, EJS templating,
+          and session management. The app is lightweight, focusing on simplicity
+          and personal introspection rather than complex data storage.
         </p>
         <p>Key highlights:</p>
         <ul>
           <li>
-            <strong>Multi-step scheduling flow</strong> – leveraging
-            Node.js/Express, EJS templating, and session management.
+            <strong>Daily Reflection Flow</strong> – A minimal, question-driven
+            interface encouraging quick, mindful responses.
           </li>
           <li>
-            <strong>Third-party integrations</strong> – with Google Maps for
-            distance calculations, Airtable for data/pricing, and IfThenPay for
-            secure payments.
+            <strong>Session-based Data</strong> – Uses
+            <code>express-session</code> to store answers in memory and ensure
+            each user only sees their own data.
           </li>
           <li>
-            <strong>Production-ready</strong> – managing real user bookings and
-            payments.
+            <strong>Randomized Prompts</strong> – A pool of questions for
+            variety and inspiration.
           </li>
         </ul>
       </section>
 
-      <!-- Skills Section -->
+      <!-- Skills Section (Matching Resume Style) -->
       <section id="skills" class="mb-5">
         <h2>Skills Used in This Project</h2>
+        <!-- Example card layout, similar to your resume approach -->
         <div class="row g-4">
           <!-- Front-End Development -->
           <div class="col-12 col-md-6 col-lg-4">
@@ -172,14 +174,14 @@
                       class="bi bi-circle-fill me-2 sub-item-icon"
                       aria-hidden="true"
                     ></i
-                    >JavaScript (ES6+)
+                    >Bootstrap for basic responsiveness
                   </li>
                   <li>
                     <i
                       class="bi bi-circle-fill me-2 sub-item-icon"
                       aria-hidden="true"
                     ></i
-                    >EJS Templating
+                    >EJS Templates
                   </li>
                 </ul>
               </div>
@@ -203,45 +205,45 @@
                       class="bi bi-circle-fill me-2 sub-item-icon"
                       aria-hidden="true"
                     ></i
-                    >Session Management (express-session)
+                    >Session Management (<code>express-session</code>)
                   </li>
                   <li>
                     <i
                       class="bi bi-circle-fill me-2 sub-item-icon"
                       aria-hidden="true"
                     ></i
-                    >RESTful APIs
+                    >RESTful Routing
                   </li>
                 </ul>
               </div>
             </div>
           </div>
-          <!-- Databases & Integrations -->
+          <!-- Additional Tools -->
           <div class="col-12 col-md-6 col-lg-4">
             <div class="card h-100 border-0 shadow-sm">
               <div class="card-body">
-                <h5 class="card-title mb-3">Database &amp; Integrations</h5>
+                <h5 class="card-title mb-3">Additional Tools &amp; Concepts</h5>
                 <ul class="list-unstyled">
                   <li>
                     <i
                       class="bi bi-circle-fill me-2 sub-item-icon"
                       aria-hidden="true"
                     ></i
-                    >Airtable (Data &amp; Pricing)
+                    >JavaScript (ES6+)
                   </li>
                   <li>
                     <i
                       class="bi bi-circle-fill me-2 sub-item-icon"
                       aria-hidden="true"
                     ></i
-                    >Google Maps API (Distance Calculations)
+                    >DOM Manipulation &amp; Fetch API
                   </li>
                   <li>
                     <i
                       class="bi bi-circle-fill me-2 sub-item-icon"
                       aria-hidden="true"
                     ></i
-                    >IfThenPay (Payment Processing)
+                    >Bootstrap Icons
                   </li>
                 </ul>
               </div>
@@ -255,95 +257,71 @@
         <h2>Key Features</h2>
         <ul>
           <li>
-            <strong>Comprehensive Scheduling Process:</strong> A multi-step flow
-            (pickup/destination, user data, transport details, payment) ensuring
-            user data is collected, validated, and stored efficiently.
+            <strong>Three-Question Limit:</strong> Users can only answer three
+            prompts per day (or per session), helping keep reflections concise.
           </li>
           <li>
-            <strong>Dynamic Pricing:</strong> Real-time fare calculation based
-            on distance (Google Maps) and configurable pricing variables
-            (Airtable).
+            <strong>Randomized Prompts:</strong> Each page load serves up a
+            random question from a curated list, ensuring variety.
           </li>
           <li>
-            <strong>Secure Payment:</strong> Integration with IfThenPay to
-            generate references (Multibanco, PinPay), recording transactions and
-            statuses in Airtable.
+            <strong>Private Session Data:</strong> Answers are stored in the
+            user’s Express session, never shared or persisted in a database.
           </li>
           <li>
-            <strong>Responsive UI &amp; Validation:</strong> User-friendly forms
-            with real-time checks and progressive data storage (session-based).
+            <strong>Simple Edit Flow:</strong> Each question can be viewed and
+            edited on a dedicated page (<code>post.ejs</code>).
           </li>
         </ul>
       </section>
 
-      <!-- Multi-Step Workflow Section -->
+      <!-- Multi-Step or Basic Workflow Section -->
       <section id="workflow" class="mb-5">
-        <h2>Multi-Step Workflow</h2>
+        <h2>Basic User Flow</h2>
         <p>
-          Ambula’s scheduling is split into distinct EJS views, each collecting
-          necessary data while updating both <em>session</em> and
-          <em>Airtable</em> records:
+          <strong>console.log(myFeelings)</strong> focuses on quick daily
+          journaling:
         </p>
         <ol>
           <li>
-            <strong>Step 1:</strong> Pickup/Destination/Date/Time → Saves in
-            session.
+            <strong>Landing Page:</strong> Introduces the concept of daily
+            reflection, with a call-to-action button (“Let’s Go”) to start.
           </li>
           <li>
-            <strong>Step 1.1:</strong> User details → Creates/updates a
-            “Utilizadores” record, then creates “Agendamento” in Airtable with
-            status <em>Simulação</em>.
+            <strong>Questions Page:</strong> Displays a random question; user
+            types an answer, which is stored in the session.
           </li>
           <li>
-            <strong>Step 2:</strong> Pricing summary (distance-based) → Option
-            for round-trip (+ discount logic), updates
-            <em>Agendamentos</em> with initial price.
+            <strong>Review List:</strong> The user can see their answered
+            questions, each linked to its own detail page.
           </li>
           <li>
-            <strong>Step 3:</strong> Personal/beneficiary details (age, gender,
-            etc.) → Links “Beneficiários” or “Utilizadores” to the
-            “Agendamento.”
-          </li>
-          <li>
-            <strong>Step 4:</strong> Transport type (ambulance/adapted vehicle)
-            &amp; extras selection → Adjusts final price, updates Airtable.
-          </li>
-          <li>
-            <strong>Step 5:</strong> Final confirmation → Summarizes all
-            details, updates <em>Agendamento</em> with final transport choice
-            and notes.
-          </li>
-          <li>
-            <strong>Step 6:</strong> Payment selection → Integrates IfThenPay,
-            creates new “Transações” record with status <em>Pendente</em>,
-            updates <em>Agendamento</em> to <em>Espera</em>.
+            <strong>Detail Page:</strong> Allows editing an individual answer,
+            with changes saved back into the session.
           </li>
         </ol>
       </section>
 
       <!-- My Contributions Section -->
       <section id="my-contribution" class="mb-5">
-        <h2>My Contributions (Solo Project)</h2>
+        <h2>My Contributions</h2>
         <ul>
           <li>
-            <strong>Full-Stack Development:</strong> From front-end EJS
-            templates, form validation, and session flow to Node.js backend
-            architecture and routing.
+            <strong>Complete Node/Express Setup:</strong> Handling routing,
+            sessions, and EJS for dynamic pages.
           </li>
           <li>
-            <strong>Airtable &amp; Google Maps Integration:</strong> Managing
-            database operations (CRUD), dynamic distance-based pricing, and
-            real-time data sync in Airtable.
+            <strong>Front-End Logic:</strong> JavaScript for random question
+            selection, form submissions, and dynamic updates.
           </li>
           <li>
-            <strong>IfThenPay Payment Flow:</strong> Generating and validating
-            payment references (Multibanco, PinPay), updating transaction
-            statuses in Airtable, and handling server callbacks.
+            <strong>Responsive Design:</strong> Ensuring a clean layout on both
+            desktop and mobile using Bootstrap and custom CSS.
           </li>
           <li>
-            <strong>Ongoing Maintenance &amp; Debugging:</strong> Set up robust
-            console and error handling, responding to real-time user feedback
-            for iterative improvements.
+            <strong>Error Handling &amp; Validation:</strong> Basic checks
+            (e.g., empty answers, session existence) to ensure a smooth user
+            experience.
           </li>
         </ul>
       </section>
@@ -353,19 +331,18 @@
         <h2>Challenges &amp; Learnings</h2>
         <ul>
           <li>
-            <strong>Complex Third-Party Integrations:</strong> Ensuring seamless
-            data flow among Google Maps, Airtable, and IfThenPay without
-            blocking or crashing the Node server.
+            <strong>Session-Based Data Management:</strong> Gained practical
+            experience with <code>express-session</code>, ensuring each user’s
+            data stayed private.
           </li>
           <li>
-            <strong>Multi-Step Session Workflow:</strong> Ensuring partial user
-            data is always available at each step while maintaining data
-            integrity in production.
+            <strong>Front-End &amp; Back-End Coordination:</strong> Learned to
+            handle fetch calls from the client side to POST answers, then reload
+            the page to show updated session data.
           </li>
           <li>
-            <strong>Scalability &amp; User Feedback:</strong> Continually
-            refining the interface and logic based on real-time usage data and
-            new feature requests.
+            <strong>Responsive Layout:</strong> Using Bootstrap’s grid system to
+            ensure the UI was cohesive across different screen sizes.
           </li>
         </ul>
       </section>
@@ -375,30 +352,38 @@
         <h2>Project Impact</h2>
         <ul>
           <li>
-            <strong>Improved Efficiency:</strong> Automated scheduling
-            drastically reduced manual phone calls and paperwork.
+            <strong>Personal Growth:</strong> Sharpened my Node.js and Express
+            skills, along with EJS templating and session handling.
           </li>
           <li>
-            <strong>Enhanced User Experience:</strong> The step-by-step
-            interface simplified complex forms, improving user satisfaction.
+            <strong>Mindful Habit:</strong> Encouraged quick, daily journaling,
+            fostering a habit of self-awareness.
           </li>
           <li>
-            <strong>Real-World Monetization:</strong> IfThenPay integration
-            enabled seamless digital transactions, boosting revenue collection.
-          </li>
-          <li>
-            <strong>Robust &amp; Scalable:</strong> The platform can handle
-            higher volumes of appointments and payments as the service expands.
+            <strong>Scalable Learning:</strong> The codebase can be extended
+            easily to add login, persistent DB storage, or more advanced
+            features.
           </li>
         </ul>
       </section>
 
-      <!-- Live Project & Code Links -->
+      <!-- Project Links -->
       <section id="project-links" class="mb-5">
-        <h2>See Ambula in Action</h2>
+        <h2>Try console.log(myFeelings)</h2>
         <p>
           <i class="bi bi-arrow-right-circle"></i>
-          <a href="https://web.ambula.pt" target="_blank">Live Project Link</a>
+          <a href="https://console-log-myfeelings.onrender.com" target="_blank">
+            Live preview on Render
+          </a>
+        </p>
+        <p>
+          <i class="bi bi-arrow-right-circle"></i>
+          <a
+            href="https://github.com/YourGitHub/console-log-myFeelings"
+            target="_blank"
+          >
+            GitHub Repository
+          </a>
         </p>
       </section>
     </main>
@@ -413,8 +398,8 @@
     </footer>
 
     <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom Script -->
+    <script src="https://github.com/Carolina-Sofia/console.log-myFeelings-"></script>
+    <!-- Custom Script (if needed) -->
     <script src="script.js"></script>
   </body>
 </html>
