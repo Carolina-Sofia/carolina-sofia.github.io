@@ -168,6 +168,10 @@ body > header > a > span {
 .github-corner:hover .octo-arm {
   animation: octocat-wave 560ms ease-in-out;
 }
+
+.only-bottom-sides-shadow {
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.2);
+}
 @keyframes octocat-wave {
   0%,
   100% {
